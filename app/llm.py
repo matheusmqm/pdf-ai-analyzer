@@ -1,5 +1,4 @@
 import requests
-import json
 
 def llm_response(texto_pdf: str, prompt_usuario: str):
     prompt_final = f"""
@@ -17,15 +16,17 @@ Se não encontrar, diga exatamente: "Informação não encontrada no documento."
 """
    
     response = requests.post(
-        "http://localhost:11434/api/generate",
+        "http://ollama:11434/api/generate",
         json={
             "model": "phi3:latest",
             "prompt": prompt_final,
-            "stream": False  # 👈 DESLIGA O STREAM
+            "stream": False 
         },
         timeout=60
     )
 
-    response.raise_for_status()  # já lança erro se não for 200
+    print("Status:", response.status_code)
+    print("Body:", response.text)
 
+    response.raise_for_status()  
     return response.json().get("response", "").strip()
