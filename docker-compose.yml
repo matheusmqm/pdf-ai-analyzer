@@ -7,8 +7,17 @@ services:
     depends_on:
       ollama:
         condition: service_healthy
+      postgres:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
     environment:
       - OLLAMA_URL=http://ollama:11434
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/pdfbeta
+      - MINIO_URL=http://minio:9000
+      - MINIO_ACCESS_KEY=minioadmin
+      - MINIO_SECRET_KEY=minioadmin
+      - MINIO_BUCKET=pdfs
 
   ollama:
     image: ollama/ollama
@@ -22,6 +31,40 @@ services:
       timeout: 5s
       retries: 5
       start_period: 10s
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: pdfbeta
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+  
+  minio:
+    image: minio/minio
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    environment:
+      - MINIO_ROOT_USER=minioadmin
+      - MINIO_ROOT_PASSWORD=minioadmin
+    volumes:
+      - minio_data:/data
+    command: server /data --console-address ":9001"
+    healthcheck:
+      test: ["CMD", "mc", "ready", "local"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 volumes:
   ollama_data:
+  postgres_data:
+  minio_data:
