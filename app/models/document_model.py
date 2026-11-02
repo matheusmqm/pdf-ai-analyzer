@@ -1,7 +1,7 @@
 from datetime import datetime
 from uuid import UUID
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 class DocumentOut(BaseModel):
@@ -12,7 +12,7 @@ class DocumentOut(BaseModel):
 
 class AskRequest(BaseModel):
     document_id: UUID
-    prompt: str
+    prompt: str = Field(min_length=1, max_length=4000)
 
 
 class AskOut(BaseModel):

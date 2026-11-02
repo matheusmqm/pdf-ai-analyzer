@@ -1,0 +1,130 @@
+/* SecondMind — tokens gerados de tokens.json do design system (temas Papel e Noite). */
+
+:root {
+  --font-display: 'Newsreader', 'Iowan Old Style', Georgia, serif;
+  --font-sans: 'Instrument Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, Menlo, monospace;
+
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --line-pitch: 28px;
+
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+  --radius-pill: 999px;
+}
+
+/* Papel (claro, padrão) */
+:root,
+:root[data-theme='light'] {
+  color-scheme: light;
+  --paper: #f5f0e6;
+  --paper-raised: #fffdf9;
+  --paper-sunken: #ebe4d5;
+  --rule: #e4dccb;
+  --margin-line: #e3c9bf;
+  --line: #d9cfbb;
+  --line-strong: #8a7f6d;
+  --ink: #2b2723;
+  --ink-muted: #5c5347;
+  --ink-subtle: #6c6254;
+  --ink-hover: #433d36;
+  --on-ink: #f8f4ea;
+  --pen: #28407a;
+  --pen-soft: #e3e8f3;
+  --marker: #f4e08a;
+  --success: var(--pen);
+  --success-soft: var(--pen-soft);
+  --danger: #b3261e;
+  --danger-soft: #f7e0dc;
+  --focus: var(--pen);
+  --shadow-sm: 0 1px 0 rgba(43, 39, 35, 0.08), 0 1px 2px rgba(43, 39, 35, 0.06);
+  --shadow-md: 0 2px 0 rgba(43, 39, 35, 0.06), 0 10px 20px -10px rgba(43, 39, 35, 0.22);
+  --shadow-lg: 0 3px 0 rgba(43, 39, 35, 0.05), 0 24px 40px -18px rgba(43, 39, 35, 0.3);
+}
+
+/* Noite (grafite quente, caderno de capa preta) */
+:root[data-theme='dark'] {
+  color-scheme: dark;
+  --paper: #1c1a17;
+  --paper-raised: #26231f;
+  --paper-sunken: #141210;
+  --rule: #36312a;
+  --margin-line: #5c433b;
+  --line: #3a352e;
+  --line-strong: #8f8576;
+  --ink: #efe9dc;
+  --ink-muted: #b8ad9b;
+  --ink-subtle: #a2988a;
+  --ink-hover: #d6cfc0;
+  --on-ink: #1c1a17;
+  --pen: #a8bcf0;
+  --pen-soft: #252c44;
+  --marker: #6b5c1c;
+  --success: var(--pen);
+  --success-soft: var(--pen-soft);
+  --danger: #ff9d92;
+  --danger-soft: #3f1d1a;
+  --focus: var(--pen);
+  --shadow-sm: 0 1px 0 rgba(0, 0, 0, 0.5);
+  --shadow-md: 0 2px 0 rgba(0, 0, 0, 0.5), 0 10px 20px -10px rgba(0, 0, 0, 0.6);
+  --shadow-lg: 0 3px 0 rgba(0, 0, 0, 0.5), 0 24px 40px -18px rgba(0, 0, 0, 0.7);
+}
+
+/* Sem JavaScript (o script do index.html normalmente define data-theme): segue o sistema. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    color-scheme: dark;
+    --paper: #1c1a17;
+    --paper-raised: #26231f;
+    --paper-sunken: #141210;
+    --rule: #36312a;
+    --margin-line: #5c433b;
+    --line: #3a352e;
+    --line-strong: #8f8576;
+    --ink: #efe9dc;
+    --ink-muted: #b8ad9b;
+    --ink-subtle: #a2988a;
+    --ink-hover: #d6cfc0;
+    --on-ink: #1c1a17;
+    --pen: #a8bcf0;
+    --pen-soft: #252c44;
+    --marker: #6b5c1c;
+    --danger: #ff9d92;
+    --danger-soft: #3f1d1a;
+    --shadow-sm: 0 1px 0 rgba(0, 0, 0, 0.5);
+    --shadow-md: 0 2px 0 rgba(0, 0, 0, 0.5), 0 10px 20px -10px rgba(0, 0, 0, 0.6);
+    --shadow-lg: 0 3px 0 rgba(0, 0, 0, 0.5), 0 24px 40px -18px rgba(0, 0, 0, 0.7);
+  }
+}
+
+/* Estilos de texto (tokens.json › type) */
+.display-xl { font-family: var(--font-display); font-size: 56px; line-height: 60px; font-weight: 500; letter-spacing: -0.02em; }
+.display-lg { font-family: var(--font-display); font-size: 40px; line-height: 46px; font-weight: 500; letter-spacing: -0.015em; }
+.display-md { font-family: var(--font-display); font-size: 28px; line-height: 34px; font-weight: 500; letter-spacing: -0.01em; }
+.title-md { font-family: var(--font-display); font-size: 20px; line-height: 28px; font-weight: 500; }
+.answer { font-family: var(--font-display); font-size: 17px; line-height: 28px; font-weight: 400; }
+.note-xl { font-family: var(--font-display); font-style: italic; font-size: 34px; line-height: 40px; font-weight: 400; }
+.note-lg { font-family: var(--font-display); font-style: italic; font-size: 22px; line-height: 28px; font-weight: 400; }
+.note-md { font-family: var(--font-display); font-style: italic; font-size: 17px; line-height: 24px; font-weight: 400; }
+.body-lg { font-family: var(--font-sans); font-size: 17px; line-height: 26px; font-weight: 400; }
+.body { font-family: var(--font-sans); font-size: 15px; line-height: 22px; font-weight: 400; }
+.body-sm { font-family: var(--font-sans); font-size: 13px; line-height: 19px; font-weight: 400; }
+.label { font-family: var(--font-sans); font-size: 13px; line-height: 16px; font-weight: 500; }
+.file-ext { font-family: var(--font-mono); font-size: 12px; line-height: 16px; font-weight: 500; letter-spacing: 0.06em; }
+.code { font-family: var(--font-mono); font-size: 13px; line-height: 20px; font-weight: 400; }
+
+@media (max-width: 640px) {
+  .display-xl { font-size: 40px; line-height: 44px; }
+  .display-lg { font-size: 32px; line-height: 38px; }
+}

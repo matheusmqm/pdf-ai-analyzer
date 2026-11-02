@@ -1,4 +1,10 @@
-import requests
+"""Pergunta sobre um PDF usando o Claude (API da Anthropic).
+
+O texto inteiro do PDF vai na mensagem, junto com a pergunta. É a única chamada ao
+Claude do projeto: uma pergunta = uma chamada.
+"""
+
+import anthropic
 
 from app.core.config import get_settings
 from app.services.pdf_service import extract_text
@@ -30,38 +36,67 @@ class LLMUnavailableError(LLMError):
     pass
 
 
+class EmptyDocumentError(Exception):
+    """O PDF não tem texto extraível (ex.: escaneado)."""
+
+
+_client: anthropic.Anthropic | None = None
+
+
+def _get_client() -> anthropic.Anthropic:
+    global _client
+    if _client is None:
+        settings = get_settings()
+        _client = anthropic.Anthropic(
+            api_key=settings.anthropic_api_key.get_secret_value(),
+            timeout=settings.llm_timeout_seconds,
+        )
+    return _client
+
+
+def _map_error(e: Exception) -> LLMError:
+    if isinstance(e, anthropic.APITimeoutError):
+        return LLMTimeoutError()
+    if isinstance(e, anthropic.RateLimitError):
+        return LLMRateLimitError()
+    if isinstance(e, (anthropic.AuthenticationError, anthropic.PermissionDeniedError)):
+        return LLMAuthError()
+    if isinstance(e, anthropic.APIStatusError):
+        # Crédito esgotado vem como 400 "credit balance is too low".
+        if e.status_code == 400 and "credit balance" in str(e.message).lower():
+            return LLMAuthError()
+        return LLMUnavailableError()
+    return LLMUnavailableError()  # APIConnectionError e demais
+
+
 def ask_question(pdf_bytes: bytes, prompt: str) -> str:
     settings = get_settings()
     texto = extract_text(pdf_bytes)
+    if not texto:
+        raise EmptyDocumentError
     try:
-        response = requests.post(
-            f"{settings.openrouter_base_url}/chat/completions",
-            headers={"Authorization": f"Bearer {settings.openrouter_api_key}"},
-            json={
-                "model": settings.openrouter_model,
-                "messages": [
-                    {"role": "system", "content": SYSTEM_PROMPT},
-                    {
-                        "role": "user",
-                        "content": f"TEXTO DO DOCUMENTO:\n{texto}\n\nPERGUNTA DO USUÁRIO:\n{prompt}",
-                    },
-                ],
-            },
-            timeout=settings.llm_timeout_seconds,
+        # Sem `thinking`, `temperature` ou `top_p`: os modelos 5.5 rejeitam (400).
+        response = _get_client().messages.create(
+            model=settings.anthropic_model,
+            max_tokens=settings.max_output_tokens,
+            system=SYSTEM_PROMPT,
+            output_config={"effort": settings.anthropic_effort},
+            messages=[
+                {
+                    "role": "user",
+                    "content": [
+                        # O documento vai num bloco próprio com cache: perguntas
+                        # seguidas sobre o mesmo PDF reaproveitam o prefixo.
+                        {
+                            "type": "text",
+                            "text": f"TEXTO DO DOCUMENTO:\n{texto}",
+                            "cache_control": {"type": "ephemeral"},
+                        },
+                        {"type": "text", "text": f"PERGUNTA DO USUÁRIO:\n{prompt}"},
+                    ],
+                }
+            ],
         )
-        response.raise_for_status()
-    except requests.Timeout as e:
-        raise LLMTimeoutError from e
-    except requests.HTTPError as e:
-        status = e.response.status_code if e.response is not None else None
-        if status == 429:
-            raise LLMRateLimitError from e
-        if status in (401, 402):
-            raise LLMAuthError from e
-        raise LLMUnavailableError from e
-    except requests.RequestException as e:
-        raise LLMUnavailableError from e
-    choices = response.json().get("choices") or []
-    if not choices:
-        return ""
-    return (choices[0]["message"].get("content") or "").strip()
+    except anthropic.AnthropicError as e:
+        raise _map_error(e) from e
+    return "".join(b.text for b in response.content if b.type == "text").strip()

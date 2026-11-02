@@ -11,3 +11,7 @@ wheels/
 .env
 .env.*
 !.env.example
+
+# Avaliação: corpus sintético gerado e resultados
+evals/corpus/
+evals/results/
