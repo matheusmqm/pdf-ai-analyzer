@@ -2,8 +2,8 @@
 @import './styles/tokens.css';
 @import './styles/secondmind.css';
 
-/* As cores do design system viram utilitários do Tailwind (bg-paper, text-ink-muted, border-line...)
-   e continuam trocando junto com o tema, porque apontam para as variáveis CSS. */
+/* The design-system colors become Tailwind utilities (bg-paper, text-ink-muted, border-line...)
+   and keep switching with the theme, because they point to the CSS variables. */
 @theme inline {
   --color-paper: var(--paper);
   --color-paper-raised: var(--paper-raised);
@@ -30,7 +30,7 @@ body {
   background: var(--paper);
   color: var(--ink);
   font-family: var(--font-sans);
-  font-size: 15px;
+  font-size: 14px;
   line-height: 22px;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
@@ -45,7 +45,7 @@ a {
   color: inherit;
 }
 
-/* Barra de rolagem discreta, como o resto do papel */
+/* Subtle scrollbar */
 * {
   scrollbar-width: thin;
   scrollbar-color: var(--line-strong) transparent;

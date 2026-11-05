@@ -5,7 +5,7 @@ import { Spinner } from './Spinner'
 
 
 
-/** Classes do botão, para aplicar também a <Link>. */
+/** Button classes, so they can also be applied to a <Link>. */
 export const buttonClass = (variant = 'primary', size = 'md', block = false) =>
   cn('sm-btn', `sm-btn--${variant}`, size !== 'md' && `sm-btn--${size}`, block && 'sm-btn--block')
 

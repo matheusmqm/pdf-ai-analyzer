@@ -2,12 +2,12 @@ import { cn } from '@/lib/utils'
 
 
 
-// O tipo é dito pela extensão escrita, num carimbo de tinta. Sem cor por tipo.
+// The file type shows up as a stamp with its extension. No color per type.
 export function FileStamp({ ext, size = 'sm', className }) {
   return (
     <span
       className={cn('sm-stamp', size === 'tile' && 'sm-stamp--tile', size === 'xl' && 'sm-stamp--xl', className)}
-      aria-label={`Arquivo ${ext.toUpperCase()}`}
+      aria-label={`${ext.toUpperCase()} file`}
     >
       {ext}
     </span>

@@ -1,8 +1,8 @@
-/* SecondMind — tokens gerados de tokens.json do design system (temas Papel e Noite). */
+/* SecondMind — design-system tokens (Paper and Night themes). Corporate typography: IBM Plex. */
 
 :root {
-  --font-display: 'Newsreader', 'Iowan Old Style', Georgia, serif;
-  --font-sans: 'Instrument Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-display: 'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-sans: 'IBM Plex Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
   --font-mono: 'IBM Plex Mono', ui-monospace, Menlo, monospace;
 
   --space-1: 4px;
@@ -15,16 +15,16 @@
   --space-10: 40px;
   --space-12: 48px;
   --space-16: 64px;
-  --line-pitch: 28px;
+  --line-pitch: 20px;
 
   --radius-sm: 4px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
-  --radius-xl: 16px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
+  --radius-xl: 10px;
   --radius-pill: 999px;
 }
 
-/* Papel (claro, padrão) */
+/* Paper (light, default) */
 :root,
 :root[data-theme='light'] {
   color-scheme: light;
@@ -33,7 +33,7 @@
   --paper-sunken: #ebe4d5;
   --rule: #e4dccb;
   --margin-line: #e3c9bf;
-  --line: #d9cfbb;
+  --line: #ddd4c1;
   --line-strong: #8a7f6d;
   --ink: #2b2723;
   --ink-muted: #5c5347;
@@ -48,12 +48,12 @@
   --danger: #b3261e;
   --danger-soft: #f7e0dc;
   --focus: var(--pen);
-  --shadow-sm: 0 1px 0 rgba(43, 39, 35, 0.08), 0 1px 2px rgba(43, 39, 35, 0.06);
-  --shadow-md: 0 2px 0 rgba(43, 39, 35, 0.06), 0 10px 20px -10px rgba(43, 39, 35, 0.22);
-  --shadow-lg: 0 3px 0 rgba(43, 39, 35, 0.05), 0 24px 40px -18px rgba(43, 39, 35, 0.3);
+  --shadow-sm: 0 1px 2px rgba(43, 39, 35, 0.07);
+  --shadow-md: 0 4px 14px -6px rgba(43, 39, 35, 0.18);
+  --shadow-lg: 0 14px 30px -14px rgba(43, 39, 35, 0.28);
 }
 
-/* Noite (grafite quente, caderno de capa preta) */
+/* Night (warm graphite) */
 :root[data-theme='dark'] {
   color-scheme: dark;
   --paper: #1c1a17;
@@ -76,12 +76,12 @@
   --danger: #ff9d92;
   --danger-soft: #3f1d1a;
   --focus: var(--pen);
-  --shadow-sm: 0 1px 0 rgba(0, 0, 0, 0.5);
-  --shadow-md: 0 2px 0 rgba(0, 0, 0, 0.5), 0 10px 20px -10px rgba(0, 0, 0, 0.6);
-  --shadow-lg: 0 3px 0 rgba(0, 0, 0, 0.5), 0 24px 40px -18px rgba(0, 0, 0, 0.7);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.45);
+  --shadow-md: 0 4px 14px -6px rgba(0, 0, 0, 0.6);
+  --shadow-lg: 0 14px 30px -14px rgba(0, 0, 0, 0.7);
 }
 
-/* Sem JavaScript (o script do index.html normalmente define data-theme): segue o sistema. */
+/* Without JavaScript (the index.html script normally sets data-theme): follow the system. */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme]) {
     color-scheme: dark;
@@ -102,29 +102,24 @@
     --marker: #6b5c1c;
     --danger: #ff9d92;
     --danger-soft: #3f1d1a;
-    --shadow-sm: 0 1px 0 rgba(0, 0, 0, 0.5);
-    --shadow-md: 0 2px 0 rgba(0, 0, 0, 0.5), 0 10px 20px -10px rgba(0, 0, 0, 0.6);
-    --shadow-lg: 0 3px 0 rgba(0, 0, 0, 0.5), 0 24px 40px -18px rgba(0, 0, 0, 0.7);
+    --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.45);
+    --shadow-md: 0 4px 14px -6px rgba(0, 0, 0, 0.6);
+    --shadow-lg: 0 14px 30px -14px rgba(0, 0, 0, 0.7);
   }
 }
 
-/* Estilos de texto (tokens.json › type) */
-.display-xl { font-family: var(--font-display); font-size: 56px; line-height: 60px; font-weight: 500; letter-spacing: -0.02em; }
-.display-lg { font-family: var(--font-display); font-size: 40px; line-height: 46px; font-weight: 500; letter-spacing: -0.015em; }
-.display-md { font-family: var(--font-display); font-size: 28px; line-height: 34px; font-weight: 500; letter-spacing: -0.01em; }
-.title-md { font-family: var(--font-display); font-size: 20px; line-height: 28px; font-weight: 500; }
-.answer { font-family: var(--font-display); font-size: 17px; line-height: 28px; font-weight: 400; }
-.note-xl { font-family: var(--font-display); font-style: italic; font-size: 34px; line-height: 40px; font-weight: 400; }
-.note-lg { font-family: var(--font-display); font-style: italic; font-size: 22px; line-height: 28px; font-weight: 400; }
-.note-md { font-family: var(--font-display); font-style: italic; font-size: 17px; line-height: 24px; font-weight: 400; }
-.body-lg { font-family: var(--font-sans); font-size: 17px; line-height: 26px; font-weight: 400; }
-.body { font-family: var(--font-sans); font-size: 15px; line-height: 22px; font-weight: 400; }
+/* Text styles */
+.display-lg { font-family: var(--font-display); font-size: 28px; line-height: 36px; font-weight: 600; letter-spacing: -0.015em; }
+.display-md { font-family: var(--font-display); font-size: 22px; line-height: 30px; font-weight: 600; letter-spacing: -0.01em; }
+.title-md { font-family: var(--font-display); font-size: 16px; line-height: 24px; font-weight: 600; }
+.eyebrow { font-family: var(--font-sans); font-size: 12px; line-height: 16px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-muted); }
+.body-lg { font-family: var(--font-sans); font-size: 15px; line-height: 24px; font-weight: 400; }
+.body { font-family: var(--font-sans); font-size: 14px; line-height: 22px; font-weight: 400; }
 .body-sm { font-family: var(--font-sans); font-size: 13px; line-height: 19px; font-weight: 400; }
 .label { font-family: var(--font-sans); font-size: 13px; line-height: 16px; font-weight: 500; }
-.file-ext { font-family: var(--font-mono); font-size: 12px; line-height: 16px; font-weight: 500; letter-spacing: 0.06em; }
+.file-ext { font-family: var(--font-mono); font-size: 11px; line-height: 16px; font-weight: 500; letter-spacing: 0.06em; }
 .code { font-family: var(--font-mono); font-size: 13px; line-height: 20px; font-weight: 400; }
 
 @media (max-width: 640px) {
-  .display-xl { font-size: 40px; line-height: 44px; }
-  .display-lg { font-size: 32px; line-height: 38px; }
+  .display-lg { font-size: 24px; line-height: 32px; }
 }

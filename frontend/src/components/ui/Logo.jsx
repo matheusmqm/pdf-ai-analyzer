@@ -2,8 +2,8 @@ import { useId } from 'react'
 import { useTheme } from '@/lib/theme'
 import { cn } from '@/lib/utils'
 
-// Dois laços desenhados à mão que se cruzam: a sua mente e a segunda mente; a interseção é marca-texto.
-// As cores vão gravadas (SVG por <img> não herda currentColor), então escolhemos pelo tema.
+// Two interlocking loops: your mind and the second mind; the intersection is the highlight.
+// Colors are hardcoded (an SVG via <img> does not inherit currentColor), so we pick by theme.
 const COLORS = {
   light: { ink: '#2b2723', pen: '#28407a', marker: '#f4e08a' },
   dark: { ink: '#efe9dc', pen: '#a8bcf0', marker: '#a58f2a' },
@@ -44,7 +44,7 @@ export function LogoMark({ size = 36, className }) {
   )
 }
 
-/** Marca completa. `database` anotado embaixo, em itálico, no cabeçalho do app e no login. */
+/** Full logo, with the uppercase `database` subtitle in the app header. */
 export function Logo({ withNote = true, className }) {
   return (
     <span className={cn('sm-logo', className)}>

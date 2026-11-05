@@ -4,7 +4,7 @@ import { cn } from '@/lib/utils'
 
 
 
-// Status sempre com ícone e palavra (nunca só cor).
+// Status always has an icon and a word (never color alone).
 export function Alert({ children, tone = 'danger', className }) {
   const Icon = tone === 'danger' ? CircleAlert : CircleCheck
   return (

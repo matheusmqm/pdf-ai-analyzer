@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 
-/** Segundos desde que `active` ficou verdadeiro. */
+/** Seconds since `active` became true. */
 export function useElapsed(active) {
   const [seconds, setSeconds] = useState(0)
   useEffect(() => {
@@ -12,16 +12,17 @@ export function useElapsed(active) {
   return seconds
 }
 
-// Um traço de caneta que se desenha em ondas enquanto o assistente procura nos arquivos.
+// Three pulsing dots while the assistant searches the files.
 export function Thinking({ label, seconds }) {
   return (
     <div className="sm-thinking" role="status">
-      <svg className="sm-pen" viewBox="0 0 64 16" aria-hidden>
-        <path d="M2 9C8 2 12 14 18 8S28 2 34 8 44 14 50 8s8-5 12-2" />
-      </svg>
+      <span className="sm-dots" aria-hidden>
+        <i />
+        <i />
+        <i />
+      </span>
       <span>
-        {label}… {seconds}s{' '}
-        {seconds >= 20 && <span className="sm-note">(pode demorar um pouquinho)</span>}
+        {label}… {seconds}s{seconds >= 20 && ' · This may take a few more moments.'}
       </span>
     </div>
   )

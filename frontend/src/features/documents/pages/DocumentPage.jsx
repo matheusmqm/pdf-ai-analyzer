@@ -1,16 +1,17 @@
 import { ArrowLeft, Download, Trash2 } from 'lucide-react'
 import { useState } from 'react'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { ErrorAlert } from '@/components/ui/Alert'
 import { Button } from '@/components/ui/Button'
 import { FileStamp } from '@/components/ui/FileStamp'
-import { ChatPanel } from '@/features/chat/components/ChatPanel'
 import { errorMessage } from '@/lib/utils'
 import { PdfViewer } from '../components/PdfViewer'
 import { useDeleteDocument, useDocuments, useDownloadDocument } from '../useDocuments'
 
 export default function DocumentPage() {
   const { id = '' } = useParams()
+  const [searchParams] = useSearchParams()
+  const page = Number.parseInt(searchParams.get('page') ?? '', 10) || undefined
   const navigate = useNavigate()
   const documents = useDocuments()
   const download = useDownloadDocument()
@@ -30,12 +31,10 @@ export default function DocumentPage() {
   if (!doc) {
     return (
       <div className="sm-empty">
-        <p className="note-xl m-0" style={{ color: 'var(--ink)' }}>
-          não achei esse PDF
-        </p>
-        <p className="mt-2 mb-4">Ele pode ter sido apagado.</p>
+        <p className="sm-empty-title">Document not found</p>
+        <p className="mt-1 mb-4">It may have been deleted.</p>
         <Link to="/" className="sm-btn sm-btn--outline">
-          Voltar aos PDFs
+          Back to documents
         </Link>
       </div>
     )
@@ -45,10 +44,10 @@ export default function DocumentPage() {
     <div className="sm-rise">
       <Link to="/" className="sm-btn sm-btn--ghost sm-btn--sm mb-3" style={{ marginLeft: -12 }}>
         <ArrowLeft className="sm-ico" style={{ width: 16, height: 16 }} aria-hidden />
-        Seus PDFs
+        Documents
       </Link>
 
-      <header className="flex flex-wrap items-center gap-4">
+      <header className="sm-pagehead flex flex-wrap items-center gap-4">
         <FileStamp ext="pdf" size="xl" />
         <h1 className="display-md m-0 min-w-0 flex-1" style={{ overflowWrap: 'anywhere' }}>
           {doc.filename}
@@ -56,7 +55,7 @@ export default function DocumentPage() {
         <div className="flex flex-wrap items-center gap-2">
           <Button variant="outline" size="sm" loading={download.isPending} onClick={() => download.mutate(doc.id)}>
             <Download className="sm-ico" style={{ width: 16, height: 16 }} aria-hidden />
-            Baixar
+            Download
           </Button>
           {confirming ? (
             <>
@@ -66,16 +65,16 @@ export default function DocumentPage() {
                 loading={remove.isPending}
                 onClick={() => remove.mutate(doc.id, { onSuccess: () => navigate('/', { replace: true }) })}
               >
-                Apagar de vez
+                Confirm deletion
               </Button>
               <Button variant="ghost" size="sm" onClick={() => setConfirming(false)}>
-                Cancelar
+                Cancel
               </Button>
             </>
           ) : (
             <Button variant="ghost" size="sm" onClick={() => setConfirming(true)}>
               <Trash2 className="sm-ico" style={{ width: 16, height: 16 }} aria-hidden />
-              Apagar
+              Delete
             </Button>
           )}
         </div>
@@ -87,12 +86,7 @@ export default function DocumentPage() {
         </div>
       )}
 
-      <div className="mt-6 grid gap-6 lg:grid-cols-2" style={{ alignItems: 'start' }}>
-        <PdfViewer key={`pdf-${doc.id}`} documentId={doc.id} title={doc.filename} />
-        <div className="sm-sticky">
-          <ChatPanel key={`chat-${doc.id}`} documentId={doc.id} />
-        </div>
-      </div>
+      <PdfViewer key={`pdf-${doc.id}`} documentId={doc.id} title={doc.filename} page={page} />
     </div>
   )
 }

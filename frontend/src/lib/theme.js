@@ -1,6 +1,6 @@
 import { useSyncExternalStore } from 'react'
 
-// Dois temas do design system: "light" (Papel) e "dark" (Noite).
+// Two design-system themes: "light" (Paper) and "dark" (Night).
  
 
 const KEY = 'secondmind.theme'
@@ -15,26 +15,26 @@ function readTheme() {
   return current === 'dark' || current === 'light' ? current : systemTheme()
 }
 
-// O script do index.html já definiu data-theme antes da primeira pintura; aqui só trocamos.
+// The index.html script already set data-theme before first paint; here we only switch.
 export function setTheme(theme) {
   document.documentElement.dataset.theme = theme
   try {
     localStorage.setItem(KEY, theme)
   } catch {
-    // Sem armazenamento: a escolha vale só nesta visita.
+    // No storage: the choice only lasts for this visit.
   }
   listeners.forEach((listener) => listener())
 }
 
 function subscribe(listener) {
   listeners.add(listener)
-  // Enquanto a pessoa não escolheu, segue a preferência do sistema.
+  // Until the user picks one, follow the system preference.
   const media = window.matchMedia('(prefers-color-scheme: dark)')
   const onSystem = () => {
     try {
       if (localStorage.getItem(KEY)) return
     } catch {
-      // ignora
+      // ignore
     }
     document.documentElement.dataset.theme = systemTheme()
     listener()

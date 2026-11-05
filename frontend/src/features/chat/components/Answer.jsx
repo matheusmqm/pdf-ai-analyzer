@@ -1,7 +1,7 @@
 import Markdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 
-/** Resposta do assistente em Markdown (listas, negrito, tabelas). */
+/** Assistant answer in Markdown (lists, bold, tables). */
 export function Answer({ text }) {
   return (
     <div className="sm-answer">

@@ -664,33 +664,6 @@ wheels = [
 ]
 
 [[package]]
-name = "pdfbeta"
-version = "0.1.0"
-source = { virtual = "." }
-dependencies = [
-    { name = "anthropic" },
-    { name = "fastapi" },
-    { name = "pdfplumber" },
-    { name = "pydantic" },
-    { name = "pydantic-settings" },
-    { name = "python-multipart" },
-    { name = "supabase" },
-    { name = "uvicorn" },
-]
-
-[package.metadata]
-requires-dist = [
-    { name = "anthropic", specifier = ">=1.0.0" },
-    { name = "fastapi", specifier = ">=0.128.8" },
-    { name = "pdfplumber", specifier = ">=0.11.9" },
-    { name = "pydantic", specifier = ">=2.12.5" },
-    { name = "pydantic-settings", specifier = ">=2.16.2" },
-    { name = "python-multipart", specifier = ">=0.0.22" },
-    { name = "supabase", specifier = ">=2.33.0" },
-    { name = "uvicorn", specifier = ">=0.40.0" },
-]
-
-[[package]]
 name = "pdfminer-six"
 version = "20260107"
 source = { registry = "https://pypi.org/simple" }
@@ -1054,6 +1027,35 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/89/2b/9169d867f4dc0413bb2e493b2e262acd2fd91056aa7614c23a408f79d62a/realtime-2.33.0.tar.gz", hash = "sha256:e4b10077d59876a75070b7e72074945ea78b4a99369771f8b968f4092847c65d", size = 21172, upload-time = "2026-10-15T19:14:19.493Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/5a/d6/4a5c8b6b12104816d9205732c1cb649f47e75367e36c06eba6bdd54e9b77/realtime-2.33.0-py3-none-any.whl", hash = "sha256:da94bb2e6e33859d1aece87656444498a1f7a5ca1c3484a84aa4a23f8940deec", size = 24158, upload-time = "2026-10-15T19:14:18.493Z" },
+]
+
+[[package]]
+name = "secondmind"
+version = "0.1.0"
+source = { virtual = "." }
+dependencies = [
+    { name = "anthropic" },
+    { name = "fastapi" },
+    { name = "httpx" },
+    { name = "pdfplumber" },
+    { name = "pydantic" },
+    { name = "pydantic-settings" },
+    { name = "python-multipart" },
+    { name = "supabase" },
+    { name = "uvicorn" },
+]
+
+[package.metadata]
+requires-dist = [
+    { name = "anthropic", specifier = ">=2.3.0,<3" },
+    { name = "fastapi", specifier = ">=0.128.8,<1" },
+    { name = "httpx", specifier = ">=0.28.1,<1" },
+    { name = "pdfplumber", specifier = ">=0.11.10,<1" },
+    { name = "pydantic", specifier = ">=2.12.5,<3" },
+    { name = "pydantic-settings", specifier = ">=2.16.2,<3" },
+    { name = "python-multipart", specifier = ">=0.0.22,<1" },
+    { name = "supabase", specifier = ">=2.33.0,<3" },
+    { name = "uvicorn", specifier = ">=0.40.0,<1" },
 ]
 
 [[package]]

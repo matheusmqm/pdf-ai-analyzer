@@ -1,87 +1,154 @@
 # SecondMind
 
-Envie PDFs e faça perguntas sobre cada um deles. Projeto pessoal e open source:
+**Upload PDFs and ask questions about your whole library at once.** Answers come from your own documents and cite the file and page they came from.
 
-- **Um único usuário**, sem cadastro, login ou e-mail.
-- Vários PDFs, sem relação entre eles: você abre um PDF e conversa com ele.
-- As respostas vêm do **Claude** ([API da Anthropic](https://docs.anthropic.com)): o texto do PDF vai junto com a pergunta (uma chamada por pergunta). Não há busca vetorial, agente nem fila de processamento.
-- O **Supabase** guarda a lista de PDFs (Postgres) e os arquivos (Storage).
+![Python](https://img.shields.io/badge/python-3.13-3776AB?logo=python&logoColor=white)
+![FastAPI](https://img.shields.io/badge/FastAPI-009688?logo=fastapi&logoColor=white)
+![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=black)
+![Supabase](https://img.shields.io/badge/Supabase-pgvector-3ECF8E?logo=supabase&logoColor=white)
+![Ollama](https://img.shields.io/badge/Ollama-bge--m3-000000)
+![Claude](https://img.shields.io/badge/Claude-Anthropic_API-D97757)
 
-> **Sem autenticação:** qualquer um que alcance a API pode usá-la. Ela sobe em `127.0.0.1`; não a exponha na internet.
+<p align="center">
+  <img src="docs/screenshots/library-light.png" alt="SecondMind, Paper (light) theme" width="49%" />
+  <img src="docs/screenshots/library-dark.png" alt="SecondMind, Night (dark) theme" width="49%" />
+</p>
+<p align="center"><sub>The Paper and Night themes. Screenshots use sample data.</sub></p>
 
-## Requisitos
+A personal, open source project:
 
-- [uv](https://docs.astral.sh/uv/) (o Python 3.13 é instalado por ele) e Node.js
-- Um projeto no [Supabase](https://supabase.com)
-- Uma chave da [API da Anthropic](https://console.anthropic.com/settings/keys) com crédito
+- **Single user**: no sign-up, login or email.
+- **One knowledge base**: every uploaded PDF feeds it.
+- **RAG**: on upload, each PDF is split into chunks (keeping the source page) and embedded locally with **Ollama**. When you ask a question, the closest chunks (vector search) are sent to **Claude** ([Anthropic API](https://docs.anthropic.com)), which answers citing file and page.
+- **Supabase** stores the PDF list and the vectors (Postgres + pgvector) and the files (Storage).
+- Ingestion runs in the background (`BackgroundTasks`); a PDF is `pending`, `processing`, `ready` or `failed`. There is no OCR: a PDF without text becomes `failed`.
 
-## Estrutura
+> **No authentication:** anyone who can reach the API can use it. It binds to `127.0.0.1`; do not expose it to the internet.
+
+## How it works
+
+**Ingestion** (on upload, in the background):
+
+```mermaid
+flowchart LR
+    U[Upload PDF] --> S[(Supabase Storage)]
+    S --> P[Extract text per page<br/>pdfplumber]
+    P --> C[Chunk with overlap<br/>keep page numbers]
+    C --> E[Embed<br/>Ollama bge-m3]
+    E --> V[(Supabase pgvector<br/>chunks)]
+```
+
+**Asking a question**:
+
+```mermaid
+sequenceDiagram
+    participant UI as React UI
+    participant API as FastAPI
+    participant O as Ollama
+    participant DB as pgvector
+    participant C as Claude
+    UI->>API: POST /ask {prompt}
+    API->>O: embed(question)
+    O-->>API: vector
+    API->>DB: match_chunks(vector, top_k)
+    DB-->>API: closest chunks + file/page
+    API->>C: question + numbered excerpts
+    C-->>API: answer citing [n]
+    API-->>UI: {answer, sources[]}
+```
+
+## Requirements
+
+- [uv](https://docs.astral.sh/uv/) (it installs Python 3.13) and Node.js 20.19+ (or 22.12+)
+- A [Supabase](https://supabase.com) project
+- [Ollama](https://ollama.com) installed, with the embedding model: `ollama pull bge-m3`
+- An [Anthropic API](https://console.anthropic.com/settings/keys) key with credit
+
+## Project structure
 
 ```
-main.py                    # sobe o uvicorn (127.0.0.1:8000, com reload)
-schema.sql                 # tabela documents + bucket pdfs (idempotente)
+main.py                    # starts uvicorn (127.0.0.1:8000, with reload)
+schema.sql                 # documents, chunks (pgvector), match_chunks and the pdfs bucket (idempotent)
 app/
   main.py                  # FastAPI + CORS
-  routes/                  # declaram os endpoints e delegam ao controller
-  controllers/             # regras e tradução de erros para HTTP
-  models/                  # formatos de entrada/saída (pydantic)
+  routes/                  # declare the endpoints and delegate to the controller
+  controllers/             # business rules and error-to-HTTP translation
+  models/                  # input/output shapes (pydantic)
   services/
-    document_service.py    # tabela documents (Supabase)
-    storage_service.py     # PDFs no Storage (upload, download, link assinado, remover)
-    pdf_service.py         # extrai o texto do PDF (pdfplumber)
-    llm_service.py         # pergunta ao Claude
-  core/config.py           # variáveis de ambiente
-  db/client.py             # cliente Supabase (service role)
-frontend/                  # React + Vite com a identidade SecondMind
+    document_service.py    # documents table (Supabase)
+    storage_service.py     # PDFs in Storage (upload, download, signed link, remove)
+    pdf_service.py         # extracts text per page (pdfplumber)
+    chunking_service.py    # splits into overlapping chunks, keeping the pages
+    embedding_service.py   # embeddings via Ollama (/api/embed)
+    ingestion_service.py   # extract -> chunk -> embed -> store (background)
+    retrieval_service.py   # embeds the question and fetches the top-k chunks
+    llm_service.py         # asks Claude with the chunks and returns the sources
+  core/config.py           # environment variables
+  db/client.py             # Supabase client (service role)
+  db/vector_store.py       # chunk inserts and the match_chunks RPC
+frontend/                  # React + Vite with the SecondMind identity
+docs/screenshots/          # images used in this README
 ```
 
-Fluxo: `Route -> Controller -> Service`.
+Flow: `Route -> Controller -> Service`.
 
-## Rodando
+## Running
 
-1. No Supabase, abra o *SQL Editor*, cole o conteúdo de `schema.sql` e execute. Isso cria a tabela `documents` (com RLS ligado e sem políticas, já que só o backend acessa) e o bucket privado `pdfs`.
-2. `cp .env.example .env` e preencha `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY` (*Project Settings > API*; só no backend) e `ANTHROPIC_API_KEY`.
-3. Backend: `uv sync && uv run python main.py` (docs em http://localhost:8000/docs).
-4. Frontend: `cd frontend && npm install && npm run dev` (http://localhost:5173). Se a API estiver em outro endereço, copie `frontend/.env.example` para `frontend/.env` e ajuste `VITE_API_URL`.
+1. In Supabase, open the *SQL Editor*, paste the contents of `schema.sql` and run it. It creates `documents`, `chunks` (pgvector), the `match_chunks` function (with RLS on and no policies, since only the backend accesses them) and the private `pdfs` bucket. PDFs uploaded before RAG existed have no chunks: delete and re-upload them.
+2. `cp .env.example .env` and fill in `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY` (*Project Settings > API*; backend only) and `ANTHROPIC_API_KEY`.
+3. Backend: `uv sync && uv run python main.py` (docs at http://localhost:8000/docs).
+4. Frontend: `cd frontend && npm install && npm run dev` (http://localhost:5173). If the API is at another address, copy `frontend/.env.example` to `frontend/.env` and adjust `VITE_API_URL`.
 
-A porta do frontend é fixa (`strictPort`) porque o backend libera só essa origem no CORS (`FRONTEND_URL`). Se mudar uma, mude a outra.
+The frontend port is fixed (`strictPort`) because the backend only allows that origin in CORS (`FRONTEND_URL`). If you change one, change the other.
 
-### Variáveis de ambiente (`.env`)
+### Environment variables (`.env`)
 
-| Variável | Padrão | O que faz |
+| Variable | Default | What it does |
 |---|---|---|
-| `SUPABASE_URL` | — | URL do projeto Supabase |
-| `SUPABASE_SERVICE_ROLE_KEY` | — | Chave service role (nunca no frontend) |
-| `SUPABASE_STORAGE_BUCKET` | `pdfs` | Bucket dos PDFs |
-| `FRONTEND_URL` | `http://localhost:5173` | Origem liberada no CORS |
-| `ANTHROPIC_API_KEY` | — | Chave da API do Claude |
-| `ANTHROPIC_MODEL` | `claude-haiku-5-5` | Modelo usado nas respostas |
-| `ANTHROPIC_EFFORT` | `low` | `low`, `medium` ou `high` (menos = mais rápido e barato) |
-| `MAX_OUTPUT_TOKENS` | `2048` | Limite de tokens da resposta |
-| `LLM_TIMEOUT_SECONDS` | `120` | Tempo máximo esperando o modelo |
-| `MAX_UPLOAD_MB` | `20` | Tamanho máximo do PDF |
-| `DOWNLOAD_URL_EXPIRES_SECONDS` | `300` | Validade do link de download/visualização |
+| `SUPABASE_URL` | — | Supabase project URL |
+| `SUPABASE_SERVICE_ROLE_KEY` | — | Service role key (never in the frontend) |
+| `SUPABASE_STORAGE_BUCKET` | `pdfs` | PDF bucket |
+| `FRONTEND_URL` | `http://localhost:5173` | Origin allowed by CORS |
+| `ANTHROPIC_API_KEY` | — | Claude API key |
+| `ANTHROPIC_MODEL` | `claude-haiku-5-5` | Model used for answers |
+| `ANTHROPIC_EFFORT` | `low` | `low`, `medium` or `high` (lower = faster and cheaper) |
+| `MAX_OUTPUT_TOKENS` | `2048` | Answer token limit |
+| `LLM_TIMEOUT_SECONDS` | `120` | Maximum time waiting for the model |
+| `OLLAMA_BASE_URL` | `http://localhost:11434` | Ollama address |
+| `EMBEDDING_MODEL` | `bge-m3` | Embedding model (multilingual) |
+| `EMBEDDING_DIM` | `1024` | Vector size; must match `vector(N)` in `schema.sql` |
+| `CHUNK_SIZE` / `CHUNK_OVERLAP` | `600` / `80` | Chunk size and overlap (approximate tokens) |
+| `TOP_K` | `8` | Chunks sent to Claude per question |
+| `MAX_UPLOAD_MB` | `20` | Maximum PDF size |
+| `DOWNLOAD_URL_EXPIRES_SECONDS` | `300` | Lifetime of the download/view link |
 
-O limite de 20 MB também está no bucket em `schema.sql`; se aumentar `MAX_UPLOAD_MB`, ajuste o bucket.
+The 20 MB limit is also set on the bucket in `schema.sql`; if you raise `MAX_UPLOAD_MB`, adjust the bucket too.
 
 ## API
 
-| Endpoint | O que faz |
+| Endpoint | What it does |
 |---|---|
-| `POST /documents/upload` | Envia um PDF (multipart, campo `file`, até `MAX_UPLOAD_MB`) |
-| `GET /documents/` | Lista os PDFs |
-| `GET /documents/{id}/download` | `{url, filename}`: link temporário que baixa o PDF; com `?inline=true`, para visualizar |
-| `POST /documents/ask` | `{document_id, prompt}` → `{resposta}`. Responde só com o texto do PDF |
-| `DELETE /documents/{id}` | Apaga o registro e o arquivo (204) |
+| `POST /documents/upload` | Uploads a PDF (multipart, field `file`, up to `MAX_UPLOAD_MB`); ingestion continues in the background |
+| `GET /documents/` | Lists PDFs with `status`, `error` and `page_count` |
+| `GET /documents/{id}/download` | `{url, filename}`: a temporary link that downloads the PDF; with `?inline=true`, to view it |
+| `POST /ask` | `{prompt}` → `{answer, sources[]}`. Answers only from the retrieved chunks; each source has `document_id`, `filename`, `page_start`, `page_end` |
+| `DELETE /documents/{id}` | Deletes the record (and chunks, by cascade) and the file (204) |
 
-Erros do upload: arquivo que não é PDF → 400, acima do limite → 413. Documento inexistente → 404.
-Erros do modelo: timeout → 504, limite de uso → 429, chave/crédito inválido → 502, PDF sem texto (escaneado) → 422.
+Upload errors: not a PDF → 400, over the limit → 413, PDF already uploaded (same hash) → 409. Unknown document → 404.
+Model errors: timeout → 504, rate limit → 429, invalid key/credit → 502, Ollama down → 503.
 
 ## Frontend
 
-React + Vite, Axios, Tailwind v4, React Router e TanStack Query, com a identidade **SecondMind** (o "caderno de brainstorming": papel, tinta, caneta azul e marca-texto; temas *Papel* e *Noite*).
+React + Vite, Axios, Tailwind v4, React Router and TanStack Query, with the **SecondMind** identity (the "brainstorming notebook": paper, ink, blue pen and highlighter; *Paper* and *Night* themes).
 
-- `/` — seus PDFs: envio de vários de uma vez (arrastar ou escolher), busca por nome, baixar e apagar.
-- `/documents/:id` — o PDF ao lado da conversa sobre ele.
+- `/`: your PDFs (multi-file upload, processing status, search by name, download and delete) next to a chat over the whole base, with clickable sources.
+- `/documents/:id?page=N`: the PDF opened at the cited page.
 
-O histórico das conversas e o tema ficam no navegador (`localStorage`); o backend não guarda nada disso.
+Chat history and theme are kept in the browser (`localStorage`); the backend stores none of it.
+
+## Known limitations
+
+- Single user, no authentication: meant to run locally.
+- No OCR: scanned PDFs cannot be ingested.
+- Ingestion runs inside the API process; a restart marks in-flight documents as `failed`.
+- Changing the embedding model or dimension requires editing `schema.sql` and re-uploading the PDFs.

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { errorMessage } from '@/lib/utils'
-import { askDocument } from './api'
+import { ask as askBase } from './api'
 
  
 
@@ -12,21 +12,22 @@ import { askDocument } from './api'
 
 
 const MAX_SAVED = 30
-const storageKey = (documentId) => `secondmind.chat.${documentId}`
+// A single conversation, over the whole base.
+const STORAGE_KEY = 'secondmind.chat.base'
 
-// O backend não guarda o histórico de perguntas; ele fica neste navegador.
-function load(documentId) {
+// The backend does not keep the question history; it stays in this browser.
+function load() {
   try {
-    const raw = localStorage.getItem(storageKey(documentId))
+    const raw = localStorage.getItem(STORAGE_KEY)
     return raw ? (JSON.parse(raw) ) : []
   } catch {
     return []
   }
 }
 
-export function useChat(documentId) {
-  const [messages, setMessages] = useState(() => load(documentId))
-  // Evita atualizar o estado depois de sair da tela.
+export function useChat() {
+  const [messages, setMessages] = useState(load)
+  // Avoids updating state after leaving the screen.
   const alive = useRef(true)
   const pending = messages.some((m) => m.status === 'pending')
 
@@ -40,11 +41,11 @@ export function useChat(documentId) {
   useEffect(() => {
     try {
       const settled = messages.filter((m) => m.status !== 'pending').slice(-MAX_SAVED)
-      localStorage.setItem(storageKey(documentId), JSON.stringify(settled))
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(settled))
     } catch {
-      // Sem armazenamento: o histórico vale só para esta visita.
+      // No storage: the history only lasts for this visit.
     }
-  }, [documentId, messages])
+  }, [messages])
 
   const ask = useCallback(
     async (question, replaceId) => {
@@ -59,13 +60,13 @@ export function useChat(documentId) {
 
       const started = performance.now()
       try {
-        const { resposta } = await askDocument(documentId, question)
-        patch({ status: 'done', answer: resposta, latencyMs: Math.round(performance.now() - started) })
+        const { answer, sources } = await askBase(question)
+        patch({ status: 'done', answer, sources: sources ?? [], latencyMs: Math.round(performance.now() - started) })
       } catch (error) {
         patch({ status: 'error', error: errorMessage(error) })
       }
     },
-    [documentId],
+    [],
   )
 
   const clear = useCallback(() => setMessages([]), [])

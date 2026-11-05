@@ -5,7 +5,7 @@ import { AppLayout } from './layouts/AppLayout'
 const LibraryPage = lazy(() => import('@/features/documents/pages/LibraryPage'))
 const DocumentPage = lazy(() => import('@/features/documents/pages/DocumentPage'))
 
-// Sem login: um único usuário, vários PDFs.
+// No login: a single user, many PDFs.
 export const router = createBrowserRouter([
   {
     element: <AppLayout />,

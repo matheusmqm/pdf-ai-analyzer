@@ -5,9 +5,9 @@ import { getDocumentUrl } from '../api'
 
 
 
-// O PDF é baixado para um blob local: o Storage pode servir o arquivo com
-// cabeçalhos que impedem a exibição direta dentro de um iframe.
-export function PdfViewer({ documentId, title }) {
+// The PDF is downloaded into a local blob: Storage may serve the file with
+// headers that prevent displaying it directly inside an iframe.
+export function PdfViewer({ documentId, title, page }) {
   const [state, setState] = useState({ status: 'loading' })
 
   useEffect(() => {
@@ -36,7 +36,7 @@ export function PdfViewer({ documentId, title }) {
   }, [documentId])
 
   if (state.status === 'error') {
-    return <ErrorAlert>Não foi possível exibir o PDF. Você ainda pode baixá-lo.</ErrorAlert>
+    return <ErrorAlert>Could not display the PDF. You can still download it.</ErrorAlert>
   }
 
   return (
@@ -49,7 +49,7 @@ export function PdfViewer({ documentId, title }) {
           <Spinner />
         </div>
       ) : (
-        <iframe title={title} src={state.src} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', border: 0 }} />
+        <iframe key={page} title={title} src={page ? `${state.src}#page=${page}` : state.src} style={{ position: 'absolute', inset: 0, width: '100%', height: '100%', border: 0 }} />
       )}
     </div>
   )

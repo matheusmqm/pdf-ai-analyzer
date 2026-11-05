@@ -4,12 +4,12 @@ export const cn = (...inputs) => clsx(inputs)
 
 export const APP_NAME = 'SecondMind'
 
-/** Limite do backend (MAX_UPLOAD_MB). */
-export const MAX_UPLOAD_MB = 25
+/** Backend limit (MAX_UPLOAD_MB). */
+export const MAX_UPLOAD_MB = 20
 
-// "28 de out." (data curta, como no brand book).
-const dateFormat = new Intl.DateTimeFormat('pt-BR', { day: 'numeric', month: 'short' })
-const dateYearFormat = new Intl.DateTimeFormat('pt-BR', {
+// "Oct 28" (short date).
+const dateFormat = new Intl.DateTimeFormat('en-US', { day: 'numeric', month: 'short' })
+const dateYearFormat = new Intl.DateTimeFormat('en-US', {
   day: 'numeric',
   month: 'short',
   year: 'numeric',
@@ -22,7 +22,7 @@ export function formatDate(iso) {
   return (sameYear ? dateFormat : dateYearFormat).format(date)
 }
 
-// "2,4 MB" (vírgula decimal).
+// "2.4 MB".
 export function formatBytes(bytes) {
   if (bytes < 1024) return `${bytes} B`
   const units = ['KB', 'MB', 'GB']
@@ -32,11 +32,11 @@ export function formatBytes(bytes) {
     value /= 1024
     unit++
   }
-  return `${value.toLocaleString('pt-BR', { maximumFractionDigits: value < 10 ? 1 : 0 })} ${units[unit]}`
+  return `${value.toLocaleString('en-US', { maximumFractionDigits: value < 10 ? 1 : 0 })} ${units[unit]}`
 }
 
 export function errorMessage(error) {
-  return error instanceof Error ? error.message : 'Algo deu errado. Tente de novo.'
+  return error instanceof Error ? error.message : 'Something went wrong. Please try again.'
 }
 
 export function fileExtension(name) {

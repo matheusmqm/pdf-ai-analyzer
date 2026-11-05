@@ -1,13 +1,12 @@
 import { ArrowUp, Eraser } from 'lucide-react'
 import { useEffect, useRef, useState, } from 'react'
-import { Note } from '@/components/ui/Scribble'
 import { useChat } from '../useChat'
 import { ChatTurn } from './ChatTurn'
 
-const SUGGESTIONS = ['Resuma este PDF', 'Quais são os pontos principais?', 'Quais números aparecem aqui?']
+const SUGGESTIONS = ['What topics do the documents cover?', 'Summarize the main points', 'Which figures and numbers appear?']
 
-export function ChatPanel({ documentId }) {
-  const chat = useChat(documentId)
+export function ChatPanel() {
+  const chat = useChat()
   const [text, setText] = useState('')
   const body = useRef(null)
   const area = useRef(null)
@@ -15,13 +14,13 @@ export function ChatPanel({ documentId }) {
 
   const last = chat.messages[chat.messages.length - 1]
 
-  // Acompanha o fim da conversa, a menos que a pessoa tenha rolado para cima.
+  // Follow the end of the conversation, unless the user has scrolled up.
   useEffect(() => {
     const el = body.current
     if (el && stick.current) el.scrollTop = el.scrollHeight
   }, [chat.messages.length, last?.status])
 
-  // Altura do campo cresce com o texto, até 128px.
+  // Field height grows with the text, up to 128px.
   useEffect(() => {
     const el = area.current
     if (!el) return
@@ -44,18 +43,18 @@ export function ChatPanel({ documentId }) {
   }
 
   return (
-    <section className="sm-chat" aria-label="Pergunte a este PDF">
+    <section className="sm-chat" aria-label="Questions about the documents">
       <div className="sm-chat-head">
         <div className="min-w-0">
-          <h2 className="sm-chat-title">Pergunte a este PDF</h2>
-          <Note className="block truncate">a resposta vem só do texto dele</Note>
+          <h2 className="sm-chat-title">Ask your documents</h2>
+          <span className="sm-chat-sub truncate">Answers based on the uploaded PDFs, with file and page</span>
         </div>
         {chat.messages.length > 0 && (
           <button
             type="button"
             className="sm-iconbtn"
-            aria-label="Limpar a conversa"
-            title="Limpar a conversa"
+            aria-label="Clear the conversation"
+            title="Clear the conversation"
             onClick={chat.clear}
           >
             <Eraser className="sm-ico" aria-hidden />
@@ -65,7 +64,7 @@ export function ChatPanel({ documentId }) {
 
       <div
         ref={body}
-        className="sm-chat-body sm-ruled sm-ruled--margin"
+        className="sm-chat-body"
         onScroll={(event) => {
           const el = event.currentTarget
           stick.current = el.scrollHeight - el.scrollTop - el.clientHeight < 80
@@ -74,10 +73,8 @@ export function ChatPanel({ documentId }) {
       >
         {chat.messages.length === 0 && (
           <>
-            <p className="sm-msg-user" style={{ color: 'var(--ink-muted)' }}>
-              o que você quer saber sobre ele?
-            </p>
-            <div className="sm-refs" aria-label="Sugestões">
+            <p className="sm-msg-hint">Ask about any PDF in your base or pick a suggestion:</p>
+            <div className="sm-refs" aria-label="Suggestions">
               {SUGGESTIONS.map((suggestion) => (
                 <button key={suggestion} type="button" className="sm-sugg" onClick={() => send(suggestion)}>
                   {suggestion}
@@ -98,15 +95,15 @@ export function ChatPanel({ documentId }) {
             ref={area}
             rows={1}
             value={text}
-            placeholder="Pergunte sobre este PDF"
-            aria-label="Sua pergunta"
+            placeholder="Type your question"
+            aria-label="Your question"
             onChange={(event) => setText(event.target.value)}
             onKeyDown={onKey}
           />
           <button
             type="button"
             className="sm-send"
-            aria-label="Enviar pergunta"
+            aria-label="Send question"
             disabled={!text.trim() || chat.pending}
             onClick={() => send()}
           >

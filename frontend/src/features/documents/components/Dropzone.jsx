@@ -1,4 +1,4 @@
-import { CircleCheck, CircleX, X } from 'lucide-react'
+import { CircleCheck, CircleX, Upload, X } from 'lucide-react'
 import { useRef, useState, } from 'react'
 import { ErrorAlert } from '@/components/ui/Alert'
 import { FileStamp } from '@/components/ui/FileStamp'
@@ -33,7 +33,7 @@ export function Dropzone({ compact = false }) {
       <div
         role="button"
         tabIndex={0}
-        aria-label="Enviar PDFs: arraste para cá ou clique para escolher"
+        aria-label="Upload PDFs: drag them here or click to choose"
         className={cn('sm-drop', compact && 'sm-drop--compact', over && 'is-over')}
         onClick={() => input.current?.click()}
         onKeyDown={onKey}
@@ -44,17 +44,19 @@ export function Dropzone({ compact = false }) {
         onDragLeave={() => setOver(false)}
         onDrop={onDrop}
       >
-        <p className="sm-drop-hand">{over ? 'pode soltar!' : 'solte aqui'}</p>
+        <span className="sm-drop-icon" aria-hidden>
+          <Upload className="sm-ico" />
+        </span>
         <div className="sm-drop-text" style={{ display: 'flex', flexDirection: 'column', alignItems: compact ? 'flex-start' : 'center', gap: 8 }}>
           <p className="sm-drop-title">
-            {over ? 'Solte para adicionar' : 'Arraste PDFs ou clique para escolher'}
+            {over ? 'Drop the files to upload' : 'Drag PDF files here or click to select'}
           </p>
           <div className="sm-row" style={{ margin: 0, justifyContent: compact ? 'flex-start' : 'center' }}>
             <FileStamp ext="pdf" />
           </div>
           {!compact && (
             <p className="sm-drop-hint">
-              Só PDF, até {MAX_UPLOAD_MB} MB por arquivo. Você pode enviar vários de uma vez.
+              PDF only, up to {MAX_UPLOAD_MB} MB per file. You can upload several at once.
             </p>
           )}
         </div>
@@ -66,7 +68,7 @@ export function Dropzone({ compact = false }) {
           hidden
           onChange={(event) => {
             pick(event.target.files)
-            event.target.value = '' // permite escolher o mesmo arquivo de novo
+            event.target.value = '' // lets the same file be picked again
           }}
         />
       </div>
@@ -80,14 +82,14 @@ export function Dropzone({ compact = false }) {
               ))}
             </ul>
             <button type="button" className="sm-link mt-1" onClick={queue.clearRejected}>
-              Dispensar
+              Dismiss
             </button>
           </ErrorAlert>
         </div>
       )}
 
       {queue.items.length > 0 && (
-        <ul className="m-0 mt-3 list-none space-y-2 p-0" aria-label="Envios em andamento">
+        <ul className="m-0 mt-3 list-none space-y-2 p-0" aria-label="Uploads in progress">
           {queue.items.map((item) => (
             <li
               key={item.id}
@@ -97,12 +99,12 @@ export function Dropzone({ compact = false }) {
               <span className="min-w-0 flex-1 truncate text-[14px]">{item.name}</span>
               {item.status === 'uploading' && (
                 <span className="flex items-center gap-2 text-[13px] text-ink-muted" role="status">
-                  <Spinner /> Enviando…
+                  <Spinner /> Uploading…
                 </span>
               )}
               {item.status === 'done' && (
                 <span className="sm-status sm-status--ok">
-                  <CircleCheck className="sm-ico" style={{ width: 16, height: 16 }} aria-hidden /> Enviado
+                  <CircleCheck className="sm-ico" style={{ width: 16, height: 16 }} aria-hidden /> Uploaded
                 </span>
               )}
               {item.status === 'error' && (
@@ -115,7 +117,7 @@ export function Dropzone({ compact = false }) {
                     type="button"
                     className="sm-iconbtn"
                     style={{ width: 28, height: 28 }}
-                    aria-label={`Dispensar aviso de ${item.name}`}
+                    aria-label={`Dismiss notice for ${item.name}`}
                     onClick={() => queue.dismiss(item.id)}
                   >
                     <X className="sm-ico" style={{ width: 16, height: 16 }} aria-hidden />

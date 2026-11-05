@@ -1,8 +1,4 @@
 import { api } from '@/lib/apiClient'
 
-// A resposta da IA pode demorar; não há timeout no navegador.
-export const askDocument = (documentId, prompt) =>
-  api('/documents/ask', {
-    method: 'POST',
-    json: { document_id: documentId, prompt },
-  })
+// Question over the whole base. The AI answer can take a while; there is no browser timeout.
+export const ask = (prompt) => api('/ask', { method: 'POST', json: { prompt } })

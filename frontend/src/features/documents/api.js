@@ -8,7 +8,7 @@ import { api } from '@/lib/apiClient'
 
 
 
-// A barra final evita o redirect 307 do FastAPI, que quebraria o CORS.
+// The trailing slash avoids FastAPI's 307 redirect, which would break CORS.
 export const listDocuments = () => api('/documents/')
 
 export function uploadDocument(file) {
@@ -24,7 +24,7 @@ export const getDocumentUrl = (id, inline = false) =>
 
 export async function downloadDocument(id) {
   const { url } = await getDocumentUrl(id)
-  // O link já força o download (Content-Disposition), sem abrir outra aba.
+  // The link already forces the download (Content-Disposition), without opening another tab.
   const link = document.createElement('a')
   link.href = url
   link.click()

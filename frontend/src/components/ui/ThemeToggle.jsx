@@ -3,14 +3,14 @@ import { useTheme } from '@/lib/theme'
 
 export function ThemeToggle() {
   const { theme, toggle } = useTheme()
-  const next = theme === 'dark' ? 'Papel' : 'Noite'
+  const next = theme === 'dark' ? 'Paper' : 'Night'
   return (
     <button
       type="button"
       className="sm-iconbtn"
       onClick={toggle}
-      aria-label={`Trocar para o tema ${next}`}
-      title={`Tema ${next}`}
+      aria-label={`Switch to the ${next} theme`}
+      title={`${next} theme`}
     >
       {theme === 'dark' ? <Sun className="sm-ico" aria-hidden /> : <Moon className="sm-ico" aria-hidden />}
     </button>

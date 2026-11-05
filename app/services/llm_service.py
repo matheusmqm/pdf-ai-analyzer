@@ -1,18 +1,23 @@
-"""Pergunta sobre um PDF usando o Claude (API da Anthropic).
+"""Answers questions about the PDF base using Claude (Anthropic API).
 
-O texto inteiro do PDF vai na mensagem, junto com a pergunta. É a única chamada ao
-Claude do projeto: uma pergunta = uma chamada.
+Only the retrieved chunks (RAG) go in the message, along with the question. This is
+the project's only call to Claude: one question = one call.
 """
+
+import re
 
 import anthropic
 
 from app.core.config import get_settings
-from app.services.pdf_service import extract_text
 
-SYSTEM_PROMPT = """Você é um assistente que extrai informações de documentos.
-Responda SOMENTE com base no texto do documento fornecido.
-Não invente informações.
-Se não encontrar, diga exatamente: "Informação não encontrada no documento."
+NOT_FOUND = "Information not found in the documents."
+
+SYSTEM_PROMPT = f"""You are an assistant that answers questions about a base of PDF documents.
+You receive numbered excerpts in the format [n] (file, page).
+Answer ONLY from those excerpts. Do not make anything up.
+Cite the source of each piece of information with the excerpt number in square brackets, e.g. [1] or [2][3].
+Answer in the same language as the user's question.
+If the excerpts do not contain the answer, say exactly: "{NOT_FOUND}"
 """
 
 
@@ -34,10 +39,6 @@ class LLMAuthError(LLMError):
 
 class LLMUnavailableError(LLMError):
     pass
-
-
-class EmptyDocumentError(Exception):
-    """O PDF não tem texto extraível (ex.: escaneado)."""
 
 
 _client: anthropic.Anthropic | None = None
@@ -62,20 +63,51 @@ def _map_error(e: Exception) -> LLMError:
     if isinstance(e, (anthropic.AuthenticationError, anthropic.PermissionDeniedError)):
         return LLMAuthError()
     if isinstance(e, anthropic.APIStatusError):
-        # Crédito esgotado vem como 400 "credit balance is too low".
+        # Exhausted credit comes as a 400 "credit balance is too low".
         if e.status_code == 400 and "credit balance" in str(e.message).lower():
             return LLMAuthError()
         return LLMUnavailableError()
     return LLMUnavailableError()  # APIConnectionError e demais
 
 
-def ask_question(pdf_bytes: bytes, prompt: str) -> str:
+def _pages(chunk: dict) -> str:
+    start, end = chunk["page_start"], chunk["page_end"]
+    return f"p. {start}" if start == end else f"pp. {start}-{end}"
+
+
+def _context(chunks: list[dict]) -> str:
+    return "\n\n".join(
+        f"[{n}] ({c['filename']}, {_pages(c)})\n{c['content']}"
+        for n, c in enumerate(chunks, start=1)
+    )
+
+
+def _sources(answer: str, chunks: list[dict]) -> list[dict]:
+    if NOT_FOUND in answer:
+        return []
+    cited = {int(n) for n in re.findall(r"\[(\d+)\]", answer)}
+    selected = [n for n in range(1, len(chunks) + 1) if n in cited] or list(
+        range(1, len(chunks) + 1)
+    )
+    return [
+        {
+            "ref": n,
+            "document_id": chunks[n - 1]["document_id"],
+            "filename": chunks[n - 1]["filename"],
+            "page_start": chunks[n - 1]["page_start"],
+            "page_end": chunks[n - 1]["page_end"],
+        }
+        for n in selected
+    ]
+
+
+def ask_question(prompt: str, chunks: list[dict]) -> tuple[str, list[dict]]:
+    """Returns (answer, sources). With no chunks, the model is not even called."""
+    if not chunks:
+        return NOT_FOUND, []
     settings = get_settings()
-    texto = extract_text(pdf_bytes)
-    if not texto:
-        raise EmptyDocumentError
     try:
-        # Sem `thinking`, `temperature` ou `top_p`: os modelos 5.5 rejeitam (400).
+        # No `thinking`, `temperature` or `top_p`: the 5.5 models reject them (400).
         response = _get_client().messages.create(
             model=settings.anthropic_model,
             max_tokens=settings.max_output_tokens,
@@ -84,19 +116,11 @@ def ask_question(pdf_bytes: bytes, prompt: str) -> str:
             messages=[
                 {
                     "role": "user",
-                    "content": [
-                        # O documento vai num bloco próprio com cache: perguntas
-                        # seguidas sobre o mesmo PDF reaproveitam o prefixo.
-                        {
-                            "type": "text",
-                            "text": f"TEXTO DO DOCUMENTO:\n{texto}",
-                            "cache_control": {"type": "ephemeral"},
-                        },
-                        {"type": "text", "text": f"PERGUNTA DO USUÁRIO:\n{prompt}"},
-                    ],
+                    "content": f"EXCERPTS:\n{_context(chunks)}\n\nUSER QUESTION:\n{prompt}",
                 }
             ],
         )
     except anthropic.AnthropicError as e:
         raise _map_error(e) from e
-    return "".join(b.text for b in response.content if b.type == "text").strip()
+    answer = "".join(b.text for b in response.content if b.type == "text").strip()
+    return answer, _sources(answer, chunks)

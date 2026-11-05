@@ -5,7 +5,7 @@ from app.db.client import get_client
 
 
 def build_storage_path() -> str:
-    # O nome original do arquivo fica só no banco; a chave do Storage é um UUID.
+    # The original filename lives only in the database; the Storage key is a UUID.
     return f"{uuid4()}.pdf"
 
 
@@ -27,8 +27,8 @@ def remove_pdf(storage_path: str) -> None:
 
 
 def create_signed_url(storage_path: str, filename: str | None = None) -> str:
-    # Com `filename` o link força o download com esse nome; sem ele o navegador
-    # pode exibir o PDF inline (visualizador).
+    # With `filename` the link forces a download with that name; without it the
+    # browser may display the PDF inline (viewer).
     options = {"download": filename} if filename else None
     result = _bucket().create_signed_url(
         storage_path, get_settings().download_url_expires_seconds, options

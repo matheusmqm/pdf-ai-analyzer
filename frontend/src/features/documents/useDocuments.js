@@ -5,7 +5,15 @@ import { deleteDocument, downloadDocument, listDocuments, uploadDocument } from 
 
 export const DOCUMENTS_KEY = ['documents']
 
-export const useDocuments = () => useQuery({ queryKey: DOCUMENTS_KEY, queryFn: listDocuments })
+// While any PDF is being processed in the background, the list refreshes itself.
+const isBusy = (doc) => doc.status === 'pending' || doc.status === 'processing'
+
+export const useDocuments = () =>
+  useQuery({
+    queryKey: DOCUMENTS_KEY,
+    queryFn: listDocuments,
+    refetchInterval: (query) => (query.state.data?.some(isBusy) ? 3000 : false),
+  })
 
 export function useDeleteDocument() {
   const queryClient = useQueryClient()
@@ -18,7 +26,7 @@ export function useDeleteDocument() {
 export const useDownloadDocument = () => useMutation({ mutationFn: downloadDocument })
 
 // ---------------------------------------------------------------------------
-// Fila de upload: vários PDFs de uma vez, dois em paralelo.
+// Upload queue: several PDFs at once, two in parallel.
 
 export const ACCEPT_ATTR = '.pdf,application/pdf'
 const CONCURRENCY = 2
@@ -39,13 +47,13 @@ export function useUploadQueue() {
 
   const patch = useCallback((id, change) => {
     setItems((current) => current.map((item) => (item.id === id ? { ...item, ...change } : item)))
-    // Itens concluídos somem sozinhos; os com erro ficam até serem dispensados.
+    // Finished items disappear on their own; failed ones stay until dismissed.
     if (change.status === 'done') {
       setTimeout(() => setItems((current) => current.filter((item) => item.id !== id)), 4000)
     }
   }, [])
 
-  // Função nomeada: ela se chama de novo quando um envio termina (puxa o próximo da fila).
+  // Named function: it calls itself again when an upload finishes (pulls the next from the queue).
   const pump = useCallback(function run() {
     while (running.current < CONCURRENCY && pending.current.length) {
       const next = pending.current.shift()
@@ -66,9 +74,9 @@ export function useUploadQueue() {
       const bad = []
       const good = []
       for (const file of files) {
-        if (fileExtension(file.name) !== 'pdf') bad.push(`${file.name}: só PDF é suportado.`)
-        else if (file.size > MAX_UPLOAD_MB * 1024 * 1024) bad.push(`${file.name}: passa de ${MAX_UPLOAD_MB} MB.`)
-        else if (file.size === 0) bad.push(`${file.name}: o arquivo está vazio.`)
+        if (fileExtension(file.name) !== 'pdf') bad.push(`${file.name}: only PDF is supported.`)
+        else if (file.size > MAX_UPLOAD_MB * 1024 * 1024) bad.push(`${file.name}: exceeds ${MAX_UPLOAD_MB} MB.`)
+        else if (file.size === 0) bad.push(`${file.name}: the file is empty.`)
         else {
           const id = crypto.randomUUID()
           good.push({ id, name: file.name, status: 'uploading' })

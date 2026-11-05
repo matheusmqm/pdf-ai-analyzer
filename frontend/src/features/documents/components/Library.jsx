@@ -22,11 +22,11 @@ export function Library() {
     <div>
       <Dropzone compact={total > 0} />
 
-      <div className="sm-section-title" style={{ marginTop: 'var(--space-8)' }}>
-        <h2 className="title-md">Seus PDFs</h2>
+      <div className="sm-section-title" style={{ marginTop: 'var(--space-6)' }}>
+        <h2 className="eyebrow">Uploaded files</h2>
         {total > 0 && (
-          <span className="sm-note" aria-live="polite">
-            {shown.length === total ? `${total} ${total === 1 ? 'PDF' : 'PDFs'}` : `${shown.length} de ${total}`}
+          <span className="sm-tag" aria-live="polite">
+            {shown.length === total ? `${total} ${total === 1 ? 'PDF' : 'PDFs'}` : `${shown.length} of ${total}`}
           </span>
         )}
       </div>
@@ -37,15 +37,15 @@ export function Library() {
           <input
             type="search"
             className="sm-input sm-input--icon"
-            placeholder="Buscar por nome"
-            aria-label="Buscar PDFs por nome"
+            placeholder="Search by file name"
+            aria-label="Search PDFs by name"
             value={query}
             onChange={(event) => setQuery(event.target.value)}
           />
         </div>
       )}
 
-      <section aria-label="Lista de PDFs">
+      <section aria-label="PDF list">
         {documents.isPending && (
           <div className="sm-stack" aria-hidden>
             {[0, 1, 2].map((i) => (
@@ -58,14 +58,12 @@ export function Library() {
 
         {documents.data && total === 0 && (
           <div className="sm-empty">
-            <p className="note-lg m-0" style={{ color: 'var(--ink)' }}>
-              nenhum PDF ainda
-            </p>
-            <p className="m-0 mt-2">Envie o primeiro acima e comece a conversar com ele.</p>
+            <p className="sm-empty-title">No documents uploaded</p>
+            <p className="m-0 mt-1">Upload your first file above to start asking questions about your base.</p>
           </div>
         )}
 
-        {total > 0 && shown.length === 0 && <p className="sm-empty m-0">Nenhum PDF com “{query}”.</p>}
+        {total > 0 && shown.length === 0 && <p className="sm-empty m-0">No documents found for “{query}”.</p>}
 
         {shown.length > 0 && (
           <div className="sm-stack">
