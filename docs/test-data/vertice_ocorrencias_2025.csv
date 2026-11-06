@@ -1,0 +1,156 @@
+﻿ocorrencia_id;data_registro;entrega_id;contrato_id;tipo;valor_prejuizo;status_sinistro;descricao
+OC-00001;09/01/2025;EN-000019;CT-2025-004;Roubo de carga;114.507,85;Negado;Carreta interceptada em trecho rodoviário, boletim registrado
+OC-00002;26/01/2025;EN-000122;CT-2025-003;Roubo de carga;164.372,59;Indenizado;Carreta interceptada em trecho rodoviário, boletim registrado
+OC-00003;14/02/2025;EN-000203;CT-2025-001;Roubo de carga;154.607,62;Aberto;Carreta interceptada em trecho rodoviário, boletim registrado
+OC-00004;03/03/2025;EN-000318;CT-2025-003;Avaria;6.340,81;Indenizado;Umidade na carga por falha de lona
+OC-00005;04/03/2025;EN-000330;CT-2025-027;Avaria;4.023,12;Indenizado;Embalagem rompida durante o transbordo
+OC-00006;08/03/2025;EN-000345;CT-2025-027;Roubo de carga;133.964,04;Indenizado;Carreta interceptada em trecho rodoviário, boletim registrado
+OC-00007;10/03/2025;EN-000356;CT-2025-002;Extravio;4.902,44;Indenizado;Volume não localizado na conferência do destino
+OC-00008;13/03/2025;EN-000381;CT-2025-019;Avaria;1.956,16;Indenizado;Umidade na carga por falha de lona
+OC-00009;14/03/2025;EN-000401;CT-2025-019;Avaria;4.900,88;Negado;Umidade na carga por falha de lona
+OC-00010;15/03/2025;EN-000410;CT-2025-019;Avaria;2.965,93;Indenizado;Umidade na carga por falha de lona
+OC-00011;16/03/2025;EN-000429;CT-2025-029;Avaria;8.503,74;Indenizado;Embalagem rompida durante o transbordo
+OC-00012;20/03/2025;EN-000437;CT-2025-029;Avaria;3.653,12;Indenizado;Paletes tombados por frenagem brusca
+OC-00013;21/03/2025;EN-000449;CT-2025-001;Extravio;11.000,47;Indenizado;Etiqueta ilegível, volume desviado ao CD errado
+OC-00014;22/03/2025;EN-000459;CT-2025-002;Avaria;8.068,34;Aberto;Umidade na carga por falha de lona
+OC-00015;27/03/2025;EN-000479;CT-2025-003;Atraso crítico;4.309,57;Negado;Veículo imobilizado por falha mecânica
+OC-00016;25/03/2025;EN-000498;CT-2025-019;Extravio;7.503,16;Aberto;Etiqueta ilegível, volume desviado ao CD errado
+OC-00017;30/03/2025;EN-000513;CT-2025-003;Extravio;13.893,93;Aberto;Etiqueta ilegível, volume desviado ao CD errado
+OC-00018;03/04/2025;EN-000524;CT-2025-019;Avaria;2.758,99;Indenizado;Embalagem rompida durante o transbordo
+OC-00019;30/03/2025;EN-000533;CT-2025-019;Avaria;3.126,82;Indenizado;Umidade na carga por falha de lona
+OC-00020;29/03/2025;EN-000539;CT-2025-023;Extravio;6.191,45;Aberto;Etiqueta ilegível, volume desviado ao CD errado
+OC-00021;07/04/2025;EN-000585;CT-2025-018;Avaria;6.284,21;Indenizado;Umidade na carga por falha de lona
+OC-00022;08/04/2025;EN-000596;CT-2025-029;Avaria;4.572,97;Indenizado;Paletes tombados por frenagem brusca
+OC-00023;11/04/2025;EN-000619;CT-2025-028;Avaria;2.166,68;Negado;Paletes tombados por frenagem brusca
+OC-00024;11/04/2025;EN-000622;CT-2025-003;Avaria;4.992,41;Aberto;Paletes tombados por frenagem brusca
+OC-00025;14/04/2025;EN-000624;CT-2025-018;Roubo de carga;101.242,68;Indenizado;Carreta interceptada em trecho rodoviário, boletim registrado
+OC-00026;16/04/2025;EN-000636;CT-2025-029;Avaria;7.368,43;Aberto;Embalagem rompida durante o transbordo
+OC-00027;16/04/2025;EN-000643;CT-2025-019;Avaria;8.217,77;Indenizado;Umidade na carga por falha de lona
+OC-00028;15/04/2025;EN-000653;CT-2025-027;Avaria;2.160,54;Aberto;Umidade na carga por falha de lona
+OC-00029;13/04/2025;EN-000661;CT-2025-028;Extravio;6.374,82;Indenizado;Volume não localizado na conferência do destino
+OC-00030;21/04/2025;EN-000675;CT-2025-002;Avaria;3.512,09;Negado;Embalagem rompida durante o transbordo
+OC-00031;22/04/2025;EN-000688;CT-2025-003;Avaria;7.864,55;Negado;Umidade na carga por falha de lona
+OC-00032;22/04/2025;EN-000694;CT-2025-027;Avaria;4.800,67;Aberto;Embalagem rompida durante o transbordo
+OC-00033;25/04/2025;EN-000720;CT-2025-019;Avaria;6.157,25;Indenizado;Umidade na carga por falha de lona
+OC-00034;24/04/2025;EN-000730;CT-2025-028;Extravio;5.633,04;Indenizado;Volume não localizado na conferência do destino
+OC-00035;27/04/2025;EN-000733;CT-2025-029;Extravio;21.250,10;Indenizado;Volume não localizado na conferência do destino
+OC-00036;22/04/2025;EN-000735;CT-2025-004;Roubo de carga;148.867,88;Aberto;Carreta interceptada em trecho rodoviário, boletim registrado
+OC-00037;22/04/2025;EN-000738;CT-2025-019;Avaria;1.784,51;Negado;Umidade na carga por falha de lona
+OC-00038;25/04/2025;EN-000763;CT-2025-018;Extravio;21.888,62;Negado;Etiqueta ilegível, volume desviado ao CD errado
+OC-00039;27/04/2025;EN-000768;CT-2025-029;Extravio;8.923,74;Aberto;Volume não localizado na conferência do destino
+OC-00040;04/05/2025;EN-000785;CT-2025-027;Extravio;17.549,38;Indenizado;Etiqueta ilegível, volume desviado ao CD errado
+OC-00041;03/05/2025;EN-000812;CT-2025-019;Avaria;2.620,60;Indenizado;Embalagem rompida durante o transbordo
+OC-00042;12/05/2025;EN-000842;CT-2025-002;Avaria;5.193,75;Indenizado;Umidade na carga por falha de lona
+OC-00043;08/05/2025;EN-000865;CT-2025-028;Avaria;2.434,75;Indenizado;Paletes tombados por frenagem brusca
+OC-00044;10/05/2025;EN-000870;CT-2025-028;Avaria;6.337,78;Indenizado;Paletes tombados por frenagem brusca
+OC-00045;20/05/2025;EN-000926;CT-2025-023;Avaria;5.842,80;Negado;Umidade na carga por falha de lona
+OC-00046;14/05/2025;EN-000929;CT-2025-029;Extravio;2.011,35;Indenizado;Etiqueta ilegível, volume desviado ao CD errado
+OC-00047;21/05/2025;EN-000935;CT-2025-019;Extravio;21.493,28;Aberto;Etiqueta ilegível, volume desviado ao CD errado
+OC-00048;17/05/2025;EN-000944;CT-2025-019;Avaria;6.240,31;Aberto;Embalagem rompida durante o transbordo
+OC-00049;23/05/2025;EN-000949;CT-2025-023;Avaria;5.709,69;Aberto;Paletes tombados por frenagem brusca
+OC-00050;23/05/2025;EN-000953;CT-2025-029;Avaria;4.805,70;Indenizado;Embalagem rompida durante o transbordo
+OC-00051;26/05/2025;EN-000970;CT-2025-018;Avaria;6.404,83;Aberto;Umidade na carga por falha de lona
+OC-00052;24/05/2025;EN-000979;CT-2025-003;Roubo de carga;116.174,10;Aberto;Subtração de carga em parada não autorizada
+OC-00053;24/05/2025;EN-000995;CT-2025-027;Extravio;21.949,37;Indenizado;Volume não localizado na conferência do destino
+OC-00054;28/05/2025;EN-001028;CT-2025-027;Avaria;5.017,77;Negado;Umidade na carga por falha de lona
+OC-00055;09/06/2025;EN-001089;CT-2025-024;Extravio;20.307,31;Indenizado;Etiqueta ilegível, volume desviado ao CD errado
+OC-00056;08/06/2025;EN-001099;CT-2025-029;Roubo de carga;110.946,36;Indenizado;Carreta interceptada em trecho rodoviário, boletim registrado
+OC-00057;07/06/2025;EN-001110;CT-2025-023;Avaria;3.343,90;Indenizado;Embalagem rompida durante o transbordo
+OC-00058;08/06/2025;EN-001123;CT-2025-027;Avaria;3.532,73;Aberto;Paletes tombados por frenagem brusca
+OC-00059;17/06/2025;EN-001157;CT-2025-019;Avaria;1.778,16;Indenizado;Embalagem rompida durante o transbordo
+OC-00060;17/06/2025;EN-001162;CT-2025-029;Avaria;2.335,06;Aberto;Umidade na carga por falha de lona
+OC-00061;17/06/2025;EN-001171;CT-2025-029;Avaria;3.599,62;Indenizado;Paletes tombados por frenagem brusca
+OC-00062;16/06/2025;EN-001189;CT-2025-002;Avaria;8.552,65;Negado;Embalagem rompida durante o transbordo
+OC-00063;21/06/2025;EN-001194;CT-2025-024;Avaria;7.344,99;Aberto;Paletes tombados por frenagem brusca
+OC-00064;19/06/2025;EN-001195;CT-2025-028;Avaria;3.907,85;Indenizado;Paletes tombados por frenagem brusca
+OC-00065;23/06/2025;EN-001205;CT-2025-001;Avaria;6.590,39;Indenizado;Umidade na carga por falha de lona
+OC-00066;17/06/2025;EN-001213;CT-2025-024;Avaria;4.739,72;Aberto;Paletes tombados por frenagem brusca
+OC-00067;27/06/2025;EN-001238;CT-2025-001;Extravio;6.144,63;Aberto;Etiqueta ilegível, volume desviado ao CD errado
+OC-00068;26/06/2025;EN-001245;CT-2025-018;Extravio;10.853,27;Indenizado;Etiqueta ilegível, volume desviado ao CD errado
+OC-00069;28/06/2025;EN-001249;CT-2025-023;Extravio;9.631,68;Indenizado;Volume não localizado na conferência do destino
+OC-00070;23/06/2025;EN-001258;CT-2025-019;Avaria;3.249,62;Negado;Embalagem rompida durante o transbordo
+OC-00071;27/06/2025;EN-001292;CT-2025-019;Roubo de carga;80.325,15;Indenizado;Carreta interceptada em trecho rodoviário, boletim registrado
+OC-00072;05/07/2025;EN-001363;CT-2025-027;Extravio;7.718,35;Indenizado;Etiqueta ilegível, volume desviado ao CD errado
+OC-00073;05/07/2025;EN-001377;CT-2025-002;Roubo de carga;173.823,34;Indenizado;Subtração de carga em parada não autorizada
+OC-00074;12/07/2025;EN-001447;CT-2025-027;Avaria;2.245,68;Aberto;Paletes tombados por frenagem brusca
+OC-00075;18/07/2025;EN-001465;CT-2025-027;Extravio;11.496,34;Aberto;Etiqueta ilegível, volume desviado ao CD errado
+OC-00076;21/07/2025;EN-001498;CT-2025-018;Avaria;8.463,49;Indenizado;Embalagem rompida durante o transbordo
+OC-00077;18/07/2025;EN-001507;CT-2025-029;Avaria;4.622,34;Indenizado;Embalagem rompida durante o transbordo
+OC-00078;24/07/2025;EN-001516;CT-2025-029;Avaria;7.752,95;Aberto;Paletes tombados por frenagem brusca
+OC-00079;22/07/2025;EN-001527;CT-2025-019;Roubo de carga;57.758,44;Aberto;Subtração de carga em parada não autorizada
+OC-00080;23/07/2025;EN-001531;CT-2025-029;Avaria;8.065,31;Negado;Umidade na carga por falha de lona
+OC-00081;22/07/2025;EN-001547;CT-2025-027;Avaria;4.403,69;Aberto;Embalagem rompida durante o transbordo
+OC-00082;26/07/2025;EN-001565;CT-2025-019;Avaria;5.024,78;Negado;Umidade na carga por falha de lona
+OC-00083;30/07/2025;EN-001580;CT-2025-003;Extravio;6.237,34;Aberto;Etiqueta ilegível, volume desviado ao CD errado
+OC-00084;01/08/2025;EN-001593;CT-2025-028;Extravio;5.250,98;Indenizado;Volume não localizado na conferência do destino
+OC-00085;05/08/2025;EN-001635;CT-2025-018;Avaria;3.354,58;Indenizado;Paletes tombados por frenagem brusca
+OC-00086;07/08/2025;EN-001645;CT-2025-018;Roubo de carga;138.867,94;Aberto;Carreta interceptada em trecho rodoviário, boletim registrado
+OC-00087;03/08/2025;EN-001647;CT-2025-019;Avaria;5.490,97;Indenizado;Umidade na carga por falha de lona
+OC-00088;09/08/2025;EN-001667;CT-2025-003;Avaria;3.905,04;Indenizado;Paletes tombados por frenagem brusca
+OC-00089;10/08/2025;EN-001684;CT-2025-023;Avaria;7.374,96;Indenizado;Embalagem rompida durante o transbordo
+OC-00090;16/08/2025;EN-001738;CT-2025-004;Roubo de carga;97.608,83;Indenizado;Carreta interceptada em trecho rodoviário, boletim registrado
+OC-00091;17/08/2025;EN-001763;CT-2025-003;Extravio;8.630,49;Negado;Etiqueta ilegível, volume desviado ao CD errado
+OC-00092;21/08/2025;EN-001768;CT-2025-028;Avaria;7.869,65;Indenizado;Umidade na carga por falha de lona
+OC-00093;20/08/2025;EN-001778;CT-2025-028;Avaria;8.227,22;Aberto;Paletes tombados por frenagem brusca
+OC-00094;20/08/2025;EN-001788;CT-2025-028;Roubo de carga;89.106,72;Indenizado;Carreta interceptada em trecho rodoviário, boletim registrado
+OC-00095;21/08/2025;EN-001819;CT-2025-019;Avaria;2.883,71;Aberto;Embalagem rompida durante o transbordo
+OC-00096;22/08/2025;EN-001836;CT-2025-003;Avaria;5.469,48;Aberto;Umidade na carga por falha de lona
+OC-00097;30/08/2025;EN-001858;CT-2025-019;Roubo de carga;45.737,82;Negado;Subtração de carga em parada não autorizada
+OC-00098;30/08/2025;EN-001861;CT-2025-029;Avaria;4.374,93;Indenizado;Embalagem rompida durante o transbordo
+OC-00099;03/09/2025;EN-001897;CT-2025-023;Extravio;3.458,37;Aberto;Volume não localizado na conferência do destino
+OC-00100;05/09/2025;EN-001949;CT-2025-019;Avaria;8.793,30;Indenizado;Paletes tombados por frenagem brusca
+OC-00101;13/09/2025;EN-002015;CT-2025-019;Avaria;5.813,09;Aberto;Embalagem rompida durante o transbordo
+OC-00102;16/09/2025;EN-002032;CT-2025-002;Extravio;17.450,07;Aberto;Etiqueta ilegível, volume desviado ao CD errado
+OC-00103;15/09/2025;EN-002043;CT-2025-002;Extravio;7.018,75;Indenizado;Volume não localizado na conferência do destino
+OC-00104;18/09/2025;EN-002063;CT-2025-019;Avaria;4.817,36;Indenizado;Paletes tombados por frenagem brusca
+OC-00105;20/09/2025;EN-002066;CT-2025-001;Roubo de carga;75.004,14;Indenizado;Carreta interceptada em trecho rodoviário, boletim registrado
+OC-00106;22/09/2025;EN-002074;CT-2025-024;Roubo de carga;158.383,95;Aberto;Carreta interceptada em trecho rodoviário, boletim registrado
+OC-00107;22/09/2025;EN-002088;CT-2025-018;Avaria;4.855,50;Aberto;Umidade na carga por falha de lona
+OC-00108;20/09/2025;EN-002092;CT-2025-027;Extravio;4.511,73;Aberto;Etiqueta ilegível, volume desviado ao CD errado
+OC-00109;23/09/2025;EN-002106;CT-2025-004;Extravio;9.232,69;Aberto;Volume não localizado na conferência do destino
+OC-00110;22/09/2025;EN-002112;CT-2025-028;Roubo de carga;145.612,00;Aberto;Subtração de carga em parada não autorizada
+OC-00111;28/09/2025;EN-002122;CT-2025-004;Roubo de carga;150.251,86;Negado;Subtração de carga em parada não autorizada
+OC-00112;29/09/2025;EN-002131;CT-2025-004;Avaria;1.478,27;Negado;Umidade na carga por falha de lona
+OC-00113;29/09/2025;EN-002139;CT-2025-001;Avaria;4.454,79;Aberto;Umidade na carga por falha de lona
+OC-00114;29/09/2025;EN-002156;CT-2025-028;Avaria;7.295,64;Indenizado;Paletes tombados por frenagem brusca
+OC-00115;01/10/2025;EN-002157;CT-2025-028;Extravio;16.113,51;Aberto;Etiqueta ilegível, volume desviado ao CD errado
+OC-00116;29/09/2025;EN-002159;CT-2025-001;Avaria;1.657,17;Aberto;Embalagem rompida durante o transbordo
+OC-00117;03/10/2025;EN-002176;CT-2025-003;Avaria;1.706,15;Indenizado;Paletes tombados por frenagem brusca
+OC-00118;03/10/2025;EN-002191;CT-2025-019;Avaria;7.853,18;Negado;Umidade na carga por falha de lona
+OC-00119;09/10/2025;EN-002234;CT-2025-001;Avaria;3.926,43;Indenizado;Paletes tombados por frenagem brusca
+OC-00120;08/10/2025;EN-002235;CT-2025-001;Avaria;852,07;Aberto;Paletes tombados por frenagem brusca
+OC-00121;10/10/2025;EN-002286;CT-2025-029;Avaria;4.946,46;Indenizado;Paletes tombados por frenagem brusca
+OC-00122;19/10/2025;EN-002325;CT-2025-024;Avaria;3.169,46;Indenizado;Paletes tombados por frenagem brusca
+OC-00123;29/10/2025;EN-002391;CT-2025-019;Avaria;3.201,09;Aberto;Paletes tombados por frenagem brusca
+OC-00124;29/10/2025;EN-002429;CT-2025-019;Avaria;8.974,54;Aberto;Umidade na carga por falha de lona
+OC-00125;28/10/2025;EN-002430;CT-2025-019;Avaria;2.992,38;Indenizado;Embalagem rompida durante o transbordo
+OC-00126;31/10/2025;EN-002444;CT-2025-003;Avaria;2.550,65;Negado;Umidade na carga por falha de lona
+OC-00127;31/10/2025;EN-002445;CT-2025-019;Extravio;18.005,52;Aberto;Volume não localizado na conferência do destino
+OC-00128;04/11/2025;EN-002460;CT-2025-029;Avaria;7.665,34;Indenizado;Umidade na carga por falha de lona
+OC-00129;03/11/2025;EN-002474;CT-2025-003;Extravio;20.609,97;Indenizado;Etiqueta ilegível, volume desviado ao CD errado
+OC-00130;05/11/2025;EN-002488;CT-2025-029;Avaria;8.933,75;Indenizado;Paletes tombados por frenagem brusca
+OC-00131;06/11/2025;EN-002494;CT-2025-024;Avaria;7.940,22;Aberto;Umidade na carga por falha de lona
+OC-00132;13/11/2025;EN-002509;CT-2025-018;Avaria;3.508,47;Indenizado;Umidade na carga por falha de lona
+OC-00133;11/11/2025;EN-002534;CT-2025-001;Roubo de carga;33.768,17;Indenizado;Carreta interceptada em trecho rodoviário, boletim registrado
+OC-00134;16/11/2025;EN-002561;CT-2025-019;Avaria;4.678,93;Indenizado;Paletes tombados por frenagem brusca
+OC-00135;18/11/2025;EN-002584;CT-2025-029;Extravio;21.416,09;Indenizado;Volume não localizado na conferência do destino
+OC-00136;24/11/2025;EN-002619;CT-2025-001;Avaria;4.881,75;Negado;Umidade na carga por falha de lona
+OC-00137;25/11/2025;EN-002636;CT-2025-027;Avaria;3.116,69;Aberto;Umidade na carga por falha de lona
+OC-00138;27/11/2025;EN-002648;CT-2025-029;Extravio;16.661,37;Negado;Volume não localizado na conferência do destino
+OC-00139;28/11/2025;EN-002674;CT-2025-003;Avaria;8.806,67;Indenizado;Paletes tombados por frenagem brusca
+OC-00140;28/11/2025;EN-002683;CT-2025-019;Extravio;8.316,49;Indenizado;Volume não localizado na conferência do destino
+OC-00141;30/11/2025;EN-002690;CT-2025-029;Avaria;7.463,93;Aberto;Paletes tombados por frenagem brusca
+OC-00142;02/12/2025;EN-002697;CT-2025-028;Roubo de carga;138.110,41;Indenizado;Subtração de carga em parada não autorizada
+OC-00143;03/12/2025;EN-002703;CT-2025-023;Avaria;2.949,08;Aberto;Umidade na carga por falha de lona
+OC-00144;05/12/2025;EN-002722;CT-2025-019;Avaria;1.210,90;Aberto;Umidade na carga por falha de lona
+OC-00145;03/12/2025;EN-002735;CT-2025-003;Roubo de carga;109.090,29;Negado;Subtração de carga em parada não autorizada
+OC-00146;09/12/2025;EN-002770;CT-2025-024;Avaria;3.030,92;Aberto;Umidade na carga por falha de lona
+OC-00147;11/12/2025;EN-002796;CT-2025-018;Extravio;13.493,43;Aberto;Etiqueta ilegível, volume desviado ao CD errado
+OC-00148;15/12/2025;EN-002811;CT-2025-002;Avaria;1.803,06;Indenizado;Umidade na carga por falha de lona
+OC-00149;20/12/2025;EN-002854;CT-2025-019;Extravio;4.888,65;Indenizado;Etiqueta ilegível, volume desviado ao CD errado
+OC-00150;17/12/2025;EN-002877;CT-2025-003;Avaria;2.283,59;Aberto;Umidade na carga por falha de lona
+OC-00151;29/12/2025;EN-002923;CT-2025-019;Extravio;3.500,38;Aberto;Etiqueta ilegível, volume desviado ao CD errado
+OC-00152;03/01/2026;EN-002970;CT-2025-003;Avaria;5.445,36;Aberto;Umidade na carga por falha de lona
+OC-00153;02/01/2026;EN-002985;CT-2025-019;Avaria;5.383,85;Aberto;Paletes tombados por frenagem brusca
+OC-00154;30/12/2025;EN-002990;CT-2025-027;Extravio;3.960,20;Negado;Etiqueta ilegível, volume desviado ao CD errado
+OC-00155;01/01/2026;EN-002997;CT-2025-003;Extravio;15.446,17;Negado;Volume não localizado na conferência do destino
