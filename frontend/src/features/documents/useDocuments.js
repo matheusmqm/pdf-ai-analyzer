@@ -5,7 +5,7 @@ import { deleteDocument, downloadDocument, listDocuments, uploadDocument } from 
 
 export const DOCUMENTS_KEY = ['documents']
 
-// While any PDF is being processed in the background, the list refreshes itself.
+// While any file is being processed in the background, the list refreshes itself.
 const isBusy = (doc) => doc.status === 'pending' || doc.status === 'processing'
 
 export const useDocuments = () =>
@@ -26,9 +26,10 @@ export function useDeleteDocument() {
 export const useDownloadDocument = () => useMutation({ mutationFn: downloadDocument })
 
 // ---------------------------------------------------------------------------
-// Upload queue: several PDFs at once, two in parallel.
+// Upload queue: several files at once, two in parallel.
 
-export const ACCEPT_ATTR = '.pdf,application/pdf'
+export const SUPPORTED_EXTENSIONS = ['pdf', 'xlsx', 'csv']
+export const ACCEPT_ATTR = '.pdf,.xlsx,.csv'
 const CONCURRENCY = 2
 
  
@@ -74,7 +75,8 @@ export function useUploadQueue() {
       const bad = []
       const good = []
       for (const file of files) {
-        if (fileExtension(file.name) !== 'pdf') bad.push(`${file.name}: only PDF is supported.`)
+        if (!SUPPORTED_EXTENSIONS.includes(fileExtension(file.name)))
+          bad.push(`${file.name}: only PDF, Excel (.xlsx) and CSV are supported.`)
         else if (file.size > MAX_UPLOAD_MB * 1024 * 1024) bad.push(`${file.name}: exceeds ${MAX_UPLOAD_MB} MB.`)
         else if (file.size === 0) bad.push(`${file.name}: the file is empty.`)
         else {

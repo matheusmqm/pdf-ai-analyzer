@@ -16,10 +16,15 @@ function StatusBadge({ doc }) {
     )
   }
   if (doc.status === 'failed') return <span className="sm-tag">Failed</span>
+  if (doc.file_type && doc.file_type !== 'pdf') {
+    if (!doc.sheet_count) return null
+    const sheets = `${doc.sheet_count} ${doc.sheet_count === 1 ? 'sheet' : 'sheets'}`
+    return <span className="sm-tag">{sheets}, {doc.row_count?.toLocaleString('en-US')} rows</span>
+  }
   return doc.page_count ? <span className="sm-tag">{doc.page_count} {doc.page_count === 1 ? 'page' : 'pages'}</span> : null
 }
 
-// Document card: opens the PDF; download and delete sit beside it.
+// Document card: opens the file; download and delete sit beside it.
 export function FileCard({ doc }) {
   const download = useDownloadDocument()
   const remove = useDeleteDocument()
@@ -28,7 +33,7 @@ export function FileCard({ doc }) {
   return (
     <article className="sm-filecard sm-rise">
       <Link to={`/documents/${doc.id}`} className="sm-filecard-main" aria-label={`Open ${doc.filename}`}>
-        <FileStamp ext="pdf" size="tile" />
+        <FileStamp ext={doc.file_type ?? 'pdf'} size="tile" />
         <div className="sm-filecard-body">
           <h3 className="sm-filecard-title" title={doc.filename}>
             {doc.filename}
@@ -36,7 +41,7 @@ export function FileCard({ doc }) {
           <p className="sm-filecard-meta">
             <span>{formatDate(doc.created_at)}</span>
             <span aria-hidden>·</span>
-            <span>PDF</span>
+            <span>{(doc.file_type ?? 'pdf').toUpperCase()}</span>
             <StatusBadge doc={doc} />
           </p>
           {doc.status === 'failed' && doc.error && (

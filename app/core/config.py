@@ -42,7 +42,22 @@ class Settings(BaseSettings):
     chunk_overlap: int = 80
     top_k: int = 8
 
-    # Upload limit (MB) and lifetime of the PDF download/view link.
+    # Routing: the spreadsheet agent only runs when a spreadsheet looks relevant to the
+    # question. Besides the normal top-k, the `sheet_top_k` closest sheet cards are
+    # searched on their own, and count as relevant above `sheet_min_similarity` (cosine).
+    sheet_top_k: int = 3
+    sheet_min_similarity: float = 0.45
+
+    # Spreadsheet agent: tool-use loop limits and the SQL sandbox (DuckDB).
+    max_agent_steps: int = 6
+    sql_max_rows: int = 50
+    sql_timeout_seconds: int = 15
+    # USD per million tokens, only used to show an estimated cost per question.
+    # Defaults are claude-haiku-5-5 prices; change them if you change the model.
+    price_input_per_mtok: float = 0.10
+    price_output_per_mtok: float = 0.50
+
+    # Upload limit (MB) and lifetime of the file download/view link.
     max_upload_mb: int = 20
     download_url_expires_seconds: int = 300
 

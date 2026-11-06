@@ -4,11 +4,13 @@ from fastapi import BackgroundTasks, HTTPException, UploadFile
 
 from app.core.config import get_settings
 from app.services import (
+    agent_service,
     document_service,
     embedding_service,
     ingestion_service,
     llm_service,
     retrieval_service,
+    spreadsheet_service,
     storage_service,
 )
 
@@ -35,26 +37,49 @@ def _get_or_404(document_id: str) -> dict:
     return document
 
 
+_SUPPORTED = ("pdf", "xlsx", "csv")
+_UNSUPPORTED = "Unsupported file. Send a PDF, an Excel (.xlsx) or a CSV file."
+
+
+def _extension(filename: str | None) -> str:
+    name = (filename or "").replace("\\", "/").split("/")[-1]
+    return name.rsplit(".", 1)[-1].lower() if "." in name else ""
+
+
+def _check_content(file_type: str, data: bytes) -> None:
+    """Validates the real content, not only the name/Content-Type sent by the browser."""
+    if file_type == "pdf" and not data.startswith(b"%PDF-"):
+        raise HTTPException(status_code=400, detail="The file is not a valid PDF")
+    if file_type == "xlsx" and not data.startswith(b"PK\x03\x04"):
+        raise HTTPException(
+            status_code=400, detail="The file is not a valid .xlsx (old .xls is not supported)"
+        )
+    if file_type == "csv" and (not data.strip() or b"\x00" in data[:4096]):
+        raise HTTPException(status_code=400, detail="The file is not a valid CSV")
+
+
 def upload_document(file: UploadFile, background_tasks: BackgroundTasks) -> dict:
-    if file.content_type != "application/pdf":
-        raise HTTPException(status_code=400, detail="The file must be a PDF")
+    file_type = _extension(file.filename)
+    if file_type not in _SUPPORTED:
+        raise HTTPException(status_code=400, detail=_UNSUPPORTED)
 
     data = _read_limited(file, get_settings().max_upload_mb * 1024 * 1024)
-    if not data.startswith(b"%PDF-"):
-        raise HTTPException(status_code=400, detail="The file is not a valid PDF")
+    _check_content(file_type, data)
 
     content_hash = hashlib.sha256(data).hexdigest()
     if document_service.find_by_hash(content_hash):
-        raise HTTPException(status_code=409, detail="This PDF has already been uploaded.")
+        raise HTTPException(status_code=409, detail="This file has already been uploaded.")
 
-    filename = (file.filename or "document.pdf").replace("\\", "/").split("/")[-1]
-    storage_path = storage_service.build_storage_path()
-    storage_service.upload_pdf(data, storage_path)
+    filename = (file.filename or f"document.{file_type}").replace("\\", "/").split("/")[-1]
+    storage_path = storage_service.build_storage_path(file_type)
+    storage_service.upload_file(data, storage_path, file_type)
     try:
-        document = document_service.save_document(filename, storage_path, content_hash)
+        document = document_service.save_document(
+            filename, storage_path, content_hash, file_type
+        )
     except Exception:
         # Record not saved: do not leave an orphaned file in Storage.
-        storage_service.remove_pdf(storage_path)
+        storage_service.remove_file(storage_path)
         raise
     background_tasks.add_task(ingestion_service.ingest_document, document["id"])
     return document
@@ -66,8 +91,17 @@ def list_documents() -> list[dict]:
 
 def ask(prompt: str) -> dict:
     try:
-        chunks = retrieval_service.retrieve(prompt)
-        answer, sources = llm_service.ask_question(prompt, chunks)
+        routed = retrieval_service.retrieve_routed(prompt)
+        if routed.sheets:
+            # A spreadsheet looks relevant: agent (search + SQL) over those spreadsheets only.
+            files = ", ".join(sorted(set(routed.sheets.values())))
+            return agent_service.ask(
+                prompt,
+                document_ids=set(routed.sheets),
+                route_note=f"A spreadsheet matched the question: {files}",
+            )
+        # No spreadsheet reached the similarity threshold: PDFs only, no agent.
+        answer, sources = llm_service.ask_question(prompt, routed.chunks)
         return {"answer": answer, "sources": sources}
     except embedding_service.EmbeddingError:
         raise HTTPException(
@@ -94,6 +128,20 @@ def ask(prompt: str) -> dict:
         )
 
 
+def get_preview(document_id: str) -> dict:
+    document = _get_or_404(document_id)
+    if document.get("file_type", "pdf") == "pdf":
+        raise HTTPException(status_code=400, detail="Preview is only available for spreadsheets")
+    if document["status"] != "ready":
+        raise HTTPException(status_code=409, detail="The file is not ready yet")
+    data = storage_service.download_file(document["storage_path"])
+    try:
+        sheets = spreadsheet_service.preview(data, document["file_type"], document["filename"])
+    except spreadsheet_service.SpreadsheetError as e:
+        raise HTTPException(status_code=422, detail=str(e))
+    return {"filename": document["filename"], "sheets": sheets}
+
+
 def get_document_url(document_id: str, download: bool) -> dict:
     document = _get_or_404(document_id)
     filename = document["filename"]
@@ -108,6 +156,6 @@ def delete_document(document_id: str) -> None:
     # Record first, file second: if Storage fails, only an orphaned file is left.
     document_service.delete_document(document_id)
     try:
-        storage_service.remove_pdf(document["storage_path"])
+        storage_service.remove_file(document["storage_path"])
     except Exception:
         pass

@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/Button'
 import { FileStamp } from '@/components/ui/FileStamp'
 import { errorMessage } from '@/lib/utils'
 import { PdfViewer } from '../components/PdfViewer'
+import { SheetViewer } from '../components/SheetViewer'
 import { useDeleteDocument, useDocuments, useDownloadDocument } from '../useDocuments'
 
 export default function DocumentPage() {
@@ -40,6 +41,8 @@ export default function DocumentPage() {
     )
   }
 
+  const isSpreadsheet = doc.file_type === 'xlsx' || doc.file_type === 'csv'
+
   return (
     <div className="sm-rise">
       <Link to="/" className="sm-btn sm-btn--ghost sm-btn--sm mb-3" style={{ marginLeft: -12 }}>
@@ -48,7 +51,7 @@ export default function DocumentPage() {
       </Link>
 
       <header className="sm-pagehead flex flex-wrap items-center gap-4">
-        <FileStamp ext="pdf" size="xl" />
+        <FileStamp ext={doc.file_type ?? 'pdf'} size="xl" />
         <h1 className="display-md m-0 min-w-0 flex-1" style={{ overflowWrap: 'anywhere' }}>
           {doc.filename}
         </h1>
@@ -86,7 +89,15 @@ export default function DocumentPage() {
         </div>
       )}
 
-      <PdfViewer key={`pdf-${doc.id}`} documentId={doc.id} title={doc.filename} page={page} />
+      {isSpreadsheet ? (
+        doc.status === 'ready' ? (
+          <SheetViewer key={`sheet-${doc.id}`} documentId={doc.id} />
+        ) : (
+          <ErrorAlert>{doc.status === 'failed' ? doc.error : 'The file is still being processed.'}</ErrorAlert>
+        )
+      ) : (
+        <PdfViewer key={`pdf-${doc.id}`} documentId={doc.id} title={doc.filename} page={page} />
+      )}
     </div>
   )
 }

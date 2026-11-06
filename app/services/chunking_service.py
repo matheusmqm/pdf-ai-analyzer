@@ -9,9 +9,10 @@ CHARS_PER_TOKEN = 4
 @dataclass
 class Chunk:
     index: int
-    page_start: int
-    page_end: int
+    page_start: int | None
+    page_end: int | None
     content: str
+    sheet_name: str | None = None  # spreadsheet cards have a sheet, not pages
 
 
 def _segments(pages: list[tuple[int, str]], max_chars: int) -> list[tuple[int, str]]:

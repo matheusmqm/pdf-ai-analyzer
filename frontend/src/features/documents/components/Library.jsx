@@ -26,7 +26,7 @@ export function Library() {
         <h2 className="eyebrow">Uploaded files</h2>
         {total > 0 && (
           <span className="sm-tag" aria-live="polite">
-            {shown.length === total ? `${total} ${total === 1 ? 'PDF' : 'PDFs'}` : `${shown.length} of ${total}`}
+            {shown.length === total ? `${total} ${total === 1 ? 'file' : 'files'}` : `${shown.length} of ${total}`}
           </span>
         )}
       </div>
@@ -38,14 +38,14 @@ export function Library() {
             type="search"
             className="sm-input sm-input--icon"
             placeholder="Search by file name"
-            aria-label="Search PDFs by name"
+            aria-label="Search files by name"
             value={query}
             onChange={(event) => setQuery(event.target.value)}
           />
         </div>
       )}
 
-      <section aria-label="PDF list">
+      <section aria-label="File list">
         {documents.isPending && (
           <div className="sm-stack" aria-hidden>
             {[0, 1, 2].map((i) => (

@@ -22,6 +22,9 @@ export const deleteDocument = (id) => api(`/documents/${id}`, { method: 'DELETE'
 export const getDocumentUrl = (id, inline = false) =>
   api(`/documents/${id}/download${inline ? '?inline=true' : ''}`)
 
+// First rows of each sheet (spreadsheets only).
+export const getPreview = (id) => api(`/documents/${id}/preview`)
+
 export async function downloadDocument(id) {
   const { url } = await getDocumentUrl(id)
   // The link already forces the download (Content-Disposition), without opening another tab.

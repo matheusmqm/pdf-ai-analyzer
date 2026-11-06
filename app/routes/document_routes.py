@@ -3,7 +3,13 @@ from uuid import UUID
 from fastapi import APIRouter, BackgroundTasks, File, Response, UploadFile, status
 
 from app.controllers import document_controller
-from app.models.document_model import AskOut, AskRequest, DocumentOut, DocumentUrlOut
+from app.models.document_model import (
+    AskOut,
+    AskRequest,
+    DocumentOut,
+    DocumentUrlOut,
+    PreviewOut,
+)
 
 router = APIRouter(prefix="/documents", tags=["documents"])
 
@@ -20,8 +26,14 @@ def list_documents():
 
 @router.get("/{document_id}/download", response_model=DocumentUrlOut)
 def download(document_id: UUID, inline: bool = False):
-    # `inline=true` returns a link to view the PDF in the page; without it, to download.
+    # `inline=true` returns a link to view the file in the page; without it, to download.
     return document_controller.get_document_url(str(document_id), download=not inline)
+
+
+@router.get("/{document_id}/preview", response_model=PreviewOut)
+def preview(document_id: UUID):
+    # First rows of each sheet, for the spreadsheet viewer.
+    return document_controller.get_preview(str(document_id))
 
 
 @router.delete("/{document_id}", status_code=status.HTTP_204_NO_CONTENT)
@@ -30,7 +42,7 @@ def delete(document_id: UUID):
     return Response(status_code=status.HTTP_204_NO_CONTENT)
 
 
-# Question over the whole knowledge base (all ready PDFs).
+# Question over the whole knowledge base (all ready PDFs and spreadsheets).
 ask_router = APIRouter(tags=["ask"])
 
 

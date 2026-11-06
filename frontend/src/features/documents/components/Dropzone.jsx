@@ -3,7 +3,7 @@ import { useRef, useState, } from 'react'
 import { ErrorAlert } from '@/components/ui/Alert'
 import { FileStamp } from '@/components/ui/FileStamp'
 import { Spinner } from '@/components/ui/Spinner'
-import { cn, MAX_UPLOAD_MB } from '@/lib/utils'
+import { cn, fileExtension, MAX_UPLOAD_MB } from '@/lib/utils'
 import { ACCEPT_ATTR, useUploadQueue } from '../useDocuments'
 
 
@@ -33,7 +33,7 @@ export function Dropzone({ compact = false }) {
       <div
         role="button"
         tabIndex={0}
-        aria-label="Upload PDFs: drag them here or click to choose"
+        aria-label="Upload files (PDF, Excel or CSV): drag them here or click to choose"
         className={cn('sm-drop', compact && 'sm-drop--compact', over && 'is-over')}
         onClick={() => input.current?.click()}
         onKeyDown={onKey}
@@ -49,14 +49,16 @@ export function Dropzone({ compact = false }) {
         </span>
         <div className="sm-drop-text" style={{ display: 'flex', flexDirection: 'column', alignItems: compact ? 'flex-start' : 'center', gap: 8 }}>
           <p className="sm-drop-title">
-            {over ? 'Drop the files to upload' : 'Drag PDF files here or click to select'}
+            {over ? 'Drop the files to upload' : 'Drag PDF, Excel or CSV files here or click to select'}
           </p>
           <div className="sm-row" style={{ margin: 0, justifyContent: compact ? 'flex-start' : 'center' }}>
             <FileStamp ext="pdf" />
+            <FileStamp ext="xlsx" />
+            <FileStamp ext="csv" />
           </div>
           {!compact && (
             <p className="sm-drop-hint">
-              PDF only, up to {MAX_UPLOAD_MB} MB per file. You can upload several at once.
+              PDF, Excel (.xlsx) or CSV, up to {MAX_UPLOAD_MB} MB per file. You can upload several at once.
             </p>
           )}
         </div>
@@ -95,7 +97,7 @@ export function Dropzone({ compact = false }) {
               key={item.id}
               className="sm-rise flex items-center gap-3 rounded-lg border border-line bg-paper-raised px-3 py-2"
             >
-              <FileStamp ext="pdf" />
+              <FileStamp ext={fileExtension(item.name)} />
               <span className="min-w-0 flex-1 truncate text-[14px]">{item.name}</span>
               {item.status === 'uploading' && (
                 <span className="flex items-center gap-2 text-[13px] text-ink-muted" role="status">

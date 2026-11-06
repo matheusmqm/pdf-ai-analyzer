@@ -13,6 +13,7 @@ def insert_chunks(document_id: str, chunks: list, embeddings: list[list[float]])
             "chunk_index": chunk.index,
             "page_start": chunk.page_start,
             "page_end": chunk.page_end,
+            "sheet_name": chunk.sheet_name,
             "content": chunk.content,
             "embedding": embedding,
             "embedding_model": model,
@@ -31,6 +32,16 @@ def match_chunks(query_embedding: list[float], k: int) -> list[dict]:
     result = (
         get_client()
         .rpc("match_chunks", {"query_embedding": query_embedding, "k": k})
+        .execute()
+    )
+    return result.data
+
+
+def match_sheet_chunks(query_embedding: list[float], k: int) -> list[dict]:
+    """Closest spreadsheet cards only (used to route the question)."""
+    result = (
+        get_client()
+        .rpc("match_sheet_chunks", {"query_embedding": query_embedding, "k": k})
         .execute()
     )
     return result.data

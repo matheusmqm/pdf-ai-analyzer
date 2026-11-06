@@ -60,8 +60,15 @@ export function useChat() {
 
       const started = performance.now()
       try {
-        const { answer, sources } = await askBase(question)
-        patch({ status: 'done', answer, sources: sources ?? [], latencyMs: Math.round(performance.now() - started) })
+        const { answer, sources, trace, usage } = await askBase(question)
+        patch({
+          status: 'done',
+          answer,
+          sources: sources ?? [],
+          trace: trace ?? [],
+          usage: usage ?? null,
+          latencyMs: Math.round(performance.now() - started),
+        })
       } catch (error) {
         patch({ status: 'error', error: errorMessage(error) })
       }

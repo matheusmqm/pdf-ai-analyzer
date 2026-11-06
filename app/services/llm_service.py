@@ -1,7 +1,9 @@
 """Answers questions about the PDF base using Claude (Anthropic API).
 
-Only the retrieved chunks (RAG) go in the message, along with the question. This is
-the project's only call to Claude: one question = one call.
+Simple path (no spreadsheets in the base): only the retrieved chunks (RAG) go in the
+message, along with the question. One question = one call. When there are
+spreadsheets, agent_service takes over (several calls with tools); it reuses the
+client and error mapping defined here.
 """
 
 import re
@@ -12,8 +14,8 @@ from app.core.config import get_settings
 
 NOT_FOUND = "Information not found in the documents."
 
-SYSTEM_PROMPT = f"""You are an assistant that answers questions about a base of PDF documents.
-You receive numbered excerpts in the format [n] (file, page).
+SYSTEM_PROMPT = f"""You are an assistant that answers questions about a base of documents.
+You receive numbered excerpts in the format [n] (file, page) or [n] (file, sheet).
 Answer ONLY from those excerpts. Do not make anything up.
 Cite the source of each piece of information with the excerpt number in square brackets, e.g. [1] or [2][3].
 Answer in the same language as the user's question.
@@ -70,14 +72,24 @@ def _map_error(e: Exception) -> LLMError:
     return LLMUnavailableError()  # APIConnectionError e demais
 
 
-def _pages(chunk: dict) -> str:
+def get_client() -> anthropic.Anthropic:
+    return _get_client()
+
+
+def map_error(e: Exception) -> LLMError:
+    return _map_error(e)
+
+
+def chunk_location(chunk: dict) -> str:
+    if chunk.get("sheet_name"):
+        return f"sheet {chunk['sheet_name']}"
     start, end = chunk["page_start"], chunk["page_end"]
     return f"p. {start}" if start == end else f"pp. {start}-{end}"
 
 
 def _context(chunks: list[dict]) -> str:
     return "\n\n".join(
-        f"[{n}] ({c['filename']}, {_pages(c)})\n{c['content']}"
+        f"[{n}] ({c['filename']}, {chunk_location(c)})\n{c['content']}"
         for n, c in enumerate(chunks, start=1)
     )
 
@@ -89,16 +101,22 @@ def _sources(answer: str, chunks: list[dict]) -> list[dict]:
     selected = [n for n in range(1, len(chunks) + 1) if n in cited] or list(
         range(1, len(chunks) + 1)
     )
-    return [
-        {
-            "ref": n,
-            "document_id": chunks[n - 1]["document_id"],
-            "filename": chunks[n - 1]["filename"],
-            "page_start": chunks[n - 1]["page_start"],
-            "page_end": chunks[n - 1]["page_end"],
-        }
-        for n in selected
-    ]
+    return [chunk_source(n, chunks[n - 1]) for n in selected]
+
+
+def chunk_source(ref: int, chunk: dict) -> dict:
+    """Source entry for a retrieved chunk (PDF page range or spreadsheet sheet)."""
+    is_sheet = bool(chunk.get("sheet_name"))
+    return {
+        "ref": ref,
+        "document_id": chunk["document_id"],
+        "filename": chunk["filename"],
+        "kind": "sheet" if is_sheet else "pdf",
+        "page_start": chunk.get("page_start"),
+        "page_end": chunk.get("page_end"),
+        "sheet_name": chunk.get("sheet_name"),
+        "sql": None,
+    }
 
 
 def ask_question(prompt: str, chunks: list[dict]) -> tuple[str, list[dict]]:

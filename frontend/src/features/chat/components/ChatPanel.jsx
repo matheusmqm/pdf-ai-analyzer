@@ -3,7 +3,11 @@ import { useEffect, useRef, useState, } from 'react'
 import { useChat } from '../useChat'
 import { ChatTurn } from './ChatTurn'
 
-const SUGGESTIONS = ['What topics do the documents cover?', 'Summarize the main points', 'Which figures and numbers appear?']
+const SUGGESTIONS = [
+  'What topics do the documents cover?',
+  'Summarize the main points',
+  'Do the figures in the reports match the spreadsheets?',
+]
 
 export function ChatPanel() {
   const chat = useChat()
@@ -47,7 +51,7 @@ export function ChatPanel() {
       <div className="sm-chat-head">
         <div className="min-w-0">
           <h2 className="sm-chat-title">Ask your documents</h2>
-          <span className="sm-chat-sub truncate">Answers based on the uploaded PDFs, with file and page</span>
+          <span className="sm-chat-sub truncate">Answers from your PDFs and spreadsheets, with the source of each number</span>
         </div>
         {chat.messages.length > 0 && (
           <button
@@ -73,7 +77,7 @@ export function ChatPanel() {
       >
         {chat.messages.length === 0 && (
           <>
-            <p className="sm-msg-hint">Ask about any PDF in your base or pick a suggestion:</p>
+            <p className="sm-msg-hint">Ask about any file in your base or pick a suggestion:</p>
             <div className="sm-refs" aria-label="Suggestions">
               {SUGGESTIONS.map((suggestion) => (
                 <button key={suggestion} type="button" className="sm-sugg" onClick={() => send(suggestion)}>
